@@ -20,6 +20,8 @@ namespace MoniHealth.Pages
             Children.Add(new MainPage());
             Children.Add(navigationPage);
             Children.Add(new SettingsPage());
+            Children.Add(new SimpleCirclePage());
+
         }
     }
 }

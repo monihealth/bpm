@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SkiaSharp;
+using SkiaSharp.Views.Forms;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -14,110 +16,85 @@ namespace MoniHealth.Pages
     
     public class GraphsPage : ContentPage
     {
-
-            /*public struct BPMRecords
-            {
-                int day, month, year, beat;
-                double sBP, mBP;
-                public BPMRecords(int x, int y, int z, double s, double m, int a)
-                {
-                    day = y;
-                    month = x;
-                    year = z;
-                    sBP = s;
-                    mBP = m;
-                    beat = a;
-                }
-
-                public string ToStringArray()
-                 {
-                     return day.ToString();
-                 }
-                public string ToStringArray()
-                {
-                    string[] temp = new string[] {
-                day.ToString(), month.ToString(), year.ToString(), sBP.ToString(), mBP.ToString(), beat.ToString() };
-                    string result = string.Join(", ", temp);
-                    return result;
-
-
-                }
-                public static object[] needString(BPMRecords recode)
-                {
-                    return recode.ToStringArray();
-                }
-
-            }
-
-            public void records(BPMRecords[] recode)
-            {
-                recode[0] = new BPMRecords(3, 1, 2018, 138.02, 92.02, 105);
-
-            }*/
-
-
-
             public GraphsPage()
-        {
-            //BPMRecords[] recode = new BPMRecords[380];
-            //BPMRecords recode = new BPMRecords(3, 1, 2018, 138.02, 92.02, 105);
-            //records(recode);
-
-            #if __IOS__
-            var resourcePrefix = "MoniHealth.iOS.Resources.";
-            #endif
-
-            #if __ANDROID__
-            var resourcePrefix = "MoniHealth.Android.Resources.";
-            #else
-            var resourcePrefix = "MoniHealth.Pages.";
-            #endif
-
-            var editor = new Label { Text = "loading..."};
-
-            #region How to load a text file embedded resource
-            var assembly = IntrospectionExtensions.GetTypeInfo(typeof(GraphsPage)).Assembly;
-            Stream stream = assembly.GetManifestResourceStream(resourcePrefix + "tempdata.txt");
-
-            string text = "";
-            using (var reader = new StreamReader(stream))
             {
-                text = reader.ReadToEnd();
-            }
-            #endregion
+                List <BPMRecords> record = new List <BPMRecords>();
+                //BPMRecords recode = new BPMRecords(3, 1, 2018, 138.02, 92.02, 105);
+                //records(recode);
 
-            editor.Text = text;
+                #if __IOS__
+                var resourcePrefix = "MoniHealth.iOS.Resources.";
+                #endif
+
+                #if __ANDROID__
+                var resourcePrefix = "MoniHealth.Android.Resources.";
+                #else
+                var resourcePrefix = "MoniHealth.Pages.";
+                #endif
+
+                var editor = new Label { Text = "loading...", FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label))
+                };
+
+                #region How to load a text file embedded resource
+                var assembly = IntrospectionExtensions.GetTypeInfo(typeof(GraphsPage)).Assembly;
+                Stream stream = assembly.GetManifestResourceStream(resourcePrefix + "tempdata.txt");
+
+                 string text = "";
+                string alltext = "";
+                int count = 0;
+                using (var reader = new StreamReader(stream))
+                {
+                 while ((text = reader.ReadLine()) != null)
+                 {
+                    alltext = alltext+ "\n" + text;
+                    record.Add(new BPMRecords(text));
+                    count = count + 1;
+                 }
+                //text = reader.ReadLine();
+
+                }
+                #endregion
+                editor.Text = alltext;
+
+                //record.Add(new BPMRecords(text));
+                //record.Add(new BPMRecords("1-Mar-18", 138.12, 85.12, 105));
+                var Lastest = new Label
+                {
+                    Text = " ",
+                    FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label))
+                };
+                Lastest.Text = record[count-1].Date +" "+ record[count - 1].Time+ " "
+                + record[count - 1].Systolic.ToString()+" "+ record[count - 1].Diastolic.ToString()
+                +" "+ record[count - 1].HeartBeat.ToString();
 
 
-            StackLayout stackLayout = new StackLayout {
+                StackLayout stackLayout = new StackLayout {
                 Margin = new Thickness(20),
                 VerticalOptions = LayoutOptions.StartAndExpand,
                 Children =
                 {
+                    
                     /*new Label { Text = (recode[0].ToStringArray()),
                         FontSize = Device.GetNamedSize (NamedSize.Medium, typeof(Label)),
                         FontAttributes = FontAttributes.Bold}*/
-                         editor
+                         Lastest, editor
+                    }
+                };
 
-                }
-            };
-            Content = new ScrollView
-            {
-                Content = stackLayout,
-                
-            };
+                Content = new ScrollView
+                {
+                    Content = stackLayout,
+                };
 
-           /*StackLayout stackLayout = new StackLayout { };
+                /*StackLayout stackLayout = new StackLayout { };
 
-            stackLayout.Children.Add(editor);
-            Content = new ScrollView
-            {
-                Content = stackLayout
-            };*/
+                stackLayout.Children.Add(editor);
+                Content = new ScrollView
+                {
+                    Content = stackLayout
+                };*/
 
-        }
-
-
+            }
 
 
 
