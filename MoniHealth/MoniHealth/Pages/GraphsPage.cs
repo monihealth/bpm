@@ -6,6 +6,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microcharts;
+using Microcharts.Forms;
+using Entry = Microcharts.Entry;
 using System.Text;
 
 using Xamarin.Forms;
@@ -68,16 +71,94 @@ namespace MoniHealth.Pages
                 +" "+ record[count - 1].HeartBeat.ToString();
 
 
-                StackLayout stackLayout = new StackLayout {
-                Margin = new Thickness(20),
-                VerticalOptions = LayoutOptions.StartAndExpand,
-                Children =
+
+                /*Button createButton = new Button
                 {
+                    Text = "Create Account",
+                    Font = Font.SystemFontOfSize(NamedSize.Small),
+                    BorderWidth = 1,
+                    HorizontalOptions = LayoutOptions.Center,
+                    VerticalOptions = LayoutOptions.CenterAndExpand
+                };
+                createButton.Clicked += OnButtonClicked;*/
+
+
+
+
+
+                /*StackLayout stackLayout = new StackLayout { };
+
+                stackLayout.Children.Add(editor);
+                Content = new ScrollView
+                {
+                Content = stackLayout
+                };*/
+
+                /*List<Entry> entries = new List<Entry> {
+                new Entry((float)record[count-2].Systolic)
+                {
+                    Color = SKColor.Parse("#FF1493"),
+                    Label = record[count-2].Date,
+                    ValueLabel = record[count - 2].Systolic.ToString()
+                },
+
+                new Entry((float)record[count-1].Systolic)
+                {
+                    Color = SKColor.Parse("#AA1493"),
+                    Label = record[count-1].Date,
+                    ValueLabel = record[count - 1].Systolic.ToString()
+                }
+
+                };*/
+
+                List<Entry> entries = new List<Entry> { };
+                double findmin = 300;
+                for (int i = 0; i <= 7; i++)
+                {
+                    entries.Add(new Entry((float)record[i].Systolic));
+                    entries[i].Label = record[i].Date;
+                    entries[i].ValueLabel = record[i].Systolic.ToString();
+                    entries[i].Color = SKColor.Parse("#FF1493");
+
                     
-                    /*new Label { Text = (recode[0].ToStringArray()),
+                    if (findmin >= record[i].Systolic)
+                    {
+                        findmin = record[i].Systolic;
+                    }
+                }
+
+
+
+                ChartView chart1 = new ChartView
+            {
+                    Chart = new LineChart { Entries = entries, MinValue = (int)findmin },
+                    HeightRequest = 160,
+                };
+                
+                /*try
+                {
+                    Content = chart1;
+                }
+                catch (Exception e)
+                {
+                    if (e.InnerException != null)
+                    {
+                        string err = e.InnerException.Message;
+                    }
+                }*/
+
+
+                StackLayout stackLayout = new StackLayout
+                {
+                    Margin = new Thickness(20),
+                    VerticalOptions = LayoutOptions.StartAndExpand,
+                    Children =
+                    {
+                    
+                        /*new Label { Text = (recode[0].ToStringArray()),
                         FontSize = Device.GetNamedSize (NamedSize.Medium, typeof(Label)),
                         FontAttributes = FontAttributes.Bold}*/
-                         Lastest, editor
+                         chart1, /*Lastest, editor */
                     }
                 };
 
@@ -86,13 +167,6 @@ namespace MoniHealth.Pages
                     Content = stackLayout,
                 };
 
-                /*StackLayout stackLayout = new StackLayout { };
-
-                stackLayout.Children.Add(editor);
-                Content = new ScrollView
-                {
-                    Content = stackLayout
-                };*/
 
             }
 
