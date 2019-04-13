@@ -111,7 +111,7 @@ namespace MoniHealth.Pages
 
                 };*/
 
-                List<Entry> entries = new List<Entry> { };
+                /*List<Entry> entries = new List<Entry> { };
                 double findmin = 300;
                 for (int i = 0; i <= 7; i++)
                 {
@@ -130,10 +130,12 @@ namespace MoniHealth.Pages
 
 
                 ChartView chart1 = new ChartView
-            {
-                    Chart = new LineChart { Entries = entries, MinValue = (int)findmin },
+                {
+                    Chart = new LineChart { Entries = entries, MinValue = (int)findmin,  },
                     HeightRequest = 160,
-                };
+                    //Chart.DrawCaptionElements()
+                    
+                };*/
                 
                 /*try
                 {
@@ -158,7 +160,7 @@ namespace MoniHealth.Pages
                         /*new Label { Text = (recode[0].ToStringArray()),
                         FontSize = Device.GetNamedSize (NamedSize.Medium, typeof(Label)),
                         FontAttributes = FontAttributes.Bold}*/
-                         chart1, /*Lastest, editor */
+                         /*chart1,*/ Lastest, editor 
                     }
                 };
 

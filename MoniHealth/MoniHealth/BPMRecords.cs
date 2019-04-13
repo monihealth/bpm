@@ -12,17 +12,28 @@ namespace MoniHealth
         private double sBP;
         private double dBP;
         private int beat;
+        private int year;
+        private int month;
+        private int day;
 
 
         public BPMRecords(string temp)
         {
             string[] tempList = temp.Split(' ');
 
-            Date = tempList[0];
+            /*Date = tempList[0];
             time = tempList[1];
             sBP = Convert.ToDouble(tempList[2]);
             dBP = Convert.ToDouble(tempList[3]);
-            beat = Int32.Parse(tempList[4]);
+            beat = Int32.Parse(tempList[4]);*/
+
+            month = Int32.Parse(tempList[0]);
+            day = Int32.Parse(tempList[1]);
+            year = Int32.Parse(tempList[2]);
+            time = tempList[3];
+            sBP = Convert.ToDouble(tempList[4]);
+            dBP = Convert.ToDouble(tempList[5]);
+            beat = Int32.Parse(tempList[6]);
         }
 
         public BPMRecords(string date, string time, double sBP, double dBP, int beat)
@@ -32,11 +43,37 @@ namespace MoniHealth
             this.dBP = dBP;
             this.beat = beat;
         }
-        
+
+        public BPMRecords(int year, int month, int day, string time, double sBP, double dBP, int beat)
+        {
+            this.year = year;
+            this.month = month;
+            this.day = day;
+            this.sBP = sBP;
+            this.dBP = dBP;
+            this.beat = beat;
+        }
+
         public string Date
         {
             get { return date; }
             set { date = value; }
+        }
+
+        public int Year
+        {
+            get { return year; }
+            set { year = value; }
+        }
+        public int Month
+        {
+            get { return month; }
+            set { month = value; }
+        }
+        public int Day
+        {
+            get { return day; }
+            set { day = value; }
         }
 
         public string Time
