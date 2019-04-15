@@ -15,7 +15,6 @@
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
     <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
     <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
     <NuGetPackageImportStamp>
@@ -108,7 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MoniHealth\MoniHealth.csproj">
-      <Project>{F69A8B84-8BBD-4E2B-AA24-1317F9B1C6F9}</Project>
+      <Project>{9409A2C8-E78A-4523-B9AB-92B1407D9F97}</Project>
       <Name>MoniHealth</Name>
     </ProjectReference>
   </ItemGroup>

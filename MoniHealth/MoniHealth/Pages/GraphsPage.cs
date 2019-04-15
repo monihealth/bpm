@@ -72,9 +72,10 @@ namespace MoniHealth.Pages
 
             Button Submit = new Button
             {
-                Text = "Submit",
+                Text = "  Submit  ",
                 Font = Font.SystemFontOfSize(NamedSize.Small),
                 BorderWidth = 1,
+                BorderColor = Color.Silver,
                 HorizontalOptions = LayoutOptions.Start,
                 VerticalOptions = LayoutOptions.Start
             };
@@ -98,9 +99,10 @@ namespace MoniHealth.Pages
 
             Button ViewGraph = new Button
             {
-                Text = "ViewGraph",
+                Text = "  ViewGraph  ",
                 Font = Font.SystemFontOfSize(NamedSize.Small),
                 BorderWidth = 1,
+                BorderColor = Color.Silver,
                 HorizontalOptions = LayoutOptions.Start,
                 VerticalOptions = LayoutOptions.Start
             };
