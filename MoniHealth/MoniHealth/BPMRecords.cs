@@ -34,6 +34,7 @@ namespace MoniHealth
             sBP = Convert.ToDouble(tempList[4]);
             dBP = Convert.ToDouble(tempList[5]);
             beat = Int32.Parse(tempList[6]);
+
         }
 
         public BPMRecords(string date, string time, double sBP, double dBP, int beat)
@@ -54,11 +55,13 @@ namespace MoniHealth
             this.beat = beat;
         }
 
-        public string Date
+        public BPMRecords(){}
+
+        /*public string Date
         {
             get { return date; }
             set { date = value; }
-        }
+        }*/
 
         public int Year
         {
@@ -99,6 +102,15 @@ namespace MoniHealth
             get { return beat; }
             set { beat = value; }
         }
-        
+
+        public string readingToString()
+        {
+            string temp = Month.ToString() + "-" + Day.ToString()
+            + "-" + Year.ToString() + " " + Time + " "
+            + Systolic.ToString() + " " + Diastolic.ToString()
+            + " " + HeartBeat.ToString();
+            return temp;
+        }
+
     }
 }

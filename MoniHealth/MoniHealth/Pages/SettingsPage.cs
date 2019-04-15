@@ -13,6 +13,7 @@ namespace MoniHealth.Pages
     {
         public SettingsPage()
         {
+            Title = "Settings";
             Content = new StackLayout
             {
                 Children = {

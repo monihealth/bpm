@@ -29,7 +29,7 @@ namespace MoniHealth.Pages
 
         public SimpleCirclePage()
         {
-            Title = "Simple Circle";
+            Title = "Graph";
 
             SKCanvasView canvasView = new SKCanvasView();
             Content = canvasView;
@@ -213,8 +213,9 @@ namespace MoniHealth.Pages
                 MinorGridlineColor = OxyColor.FromArgb(20, 0, 0, 139),
                 MinorGridlineStyle = LineStyle.Solid
             };
-
-                var dateTimeAxis1 = new DateTimeAxis
+            linearAxisY.IsZoomEnabled = false;
+            linearAxisY.IsPanEnabled = false;
+            var dateTimeAxis1 = new DateTimeAxis
                 {
                     Title = "Date",
                     CalendarWeekRule = CalendarWeekRule.FirstFourDayWeek,
