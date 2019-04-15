@@ -12,14 +12,17 @@ namespace MoniHealth.Pages
 
 		public TabPage ()
         {
-            var navigationPage = new NavigationPage(new GraphsPage());
+            var navigationPage = new NavigationPage();
             //navigationPage.Icon = "something.png";
             Padding = new Thickness(10, 0);
-            navigationPage.Title = "MoniHealth";
+            
 
             Children.Add(new MainPage());
-            Children.Add(navigationPage);
+            Children.Add(new GraphsPage());
             Children.Add(new SettingsPage());
+            //Children.Add(new SimpleCirclePage());
+            NavigationPage.SetHasNavigationBar(this, false);
+            base.OnAppearing();
         }
     }
 }
