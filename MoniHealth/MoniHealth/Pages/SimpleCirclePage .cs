@@ -128,8 +128,8 @@ namespace MoniHealth.Pages
                 Content = new PlotView
                 {
                     Model = plotModel1,
-                    VerticalOptions = LayoutOptions.CenterAndExpand,
-                    HorizontalOptions = LayoutOptions.CenterAndExpand,
+                    VerticalOptions = LayoutOptions.Fill,
+                    HorizontalOptions = LayoutOptions.Fill,
                 };
             }
             catch (Exception e)
