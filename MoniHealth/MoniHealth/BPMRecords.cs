@@ -6,7 +6,7 @@ namespace MoniHealth
 {
     class BPMRecords
     {
-
+        private DateTime alldate;
         private string date;
         private string time;
         private double sBP;
@@ -30,6 +30,7 @@ namespace MoniHealth
             month = Int32.Parse(tempList[0]);
             day = Int32.Parse(tempList[1]);
             year = Int32.Parse(tempList[2]);
+            alldate = new DateTime(year, month, day);
             time = tempList[3];
             sBP = Convert.ToDouble(tempList[4]);
             dBP = Convert.ToDouble(tempList[5]);
@@ -50,6 +51,7 @@ namespace MoniHealth
             this.year = year;
             this.month = month;
             this.day = day;
+            this.alldate = new DateTime(year, month, day);
             this.sBP = sBP;
             this.dBP = dBP;
             this.beat = beat;
@@ -77,6 +79,12 @@ namespace MoniHealth
         {
             get { return day; }
             set { day = value; }
+        }
+
+        public DateTime AllDate
+        {
+            get { return alldate; }
+            set { alldate = value; }
         }
 
         public string Time
