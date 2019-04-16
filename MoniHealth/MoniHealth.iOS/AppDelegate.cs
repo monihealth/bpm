@@ -24,6 +24,7 @@ namespace MoniHealth.iOS
         {
             global::Xamarin.Forms.Forms.Init();
             OxyPlot.Xamarin.Forms.Platform.iOS.PlotViewRenderer.Init();
+            PlotViewRenderer plot = new PlotViewRenderer();
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);
