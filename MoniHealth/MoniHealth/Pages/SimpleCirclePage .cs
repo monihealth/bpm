@@ -31,14 +31,19 @@ namespace MoniHealth.Pages
         public SimpleCirclePage()
         {
             Title = "Graph";
+            //GraphsPage gif = new GraphsPage();
 
+            //var starting = new Label() ;
+            //var ending = new Label();
+            //starting = TabPage.gif.startlable;
+            //ending = TabPage.gif.endlable;
             SKCanvasView canvasView = new SKCanvasView();
             Content = canvasView;
 
             List<BPMRecords> record = new List<BPMRecords>();
             //BPMRecords recode = new BPMRecords(3, 1, 2018, 138.02, 92.02, 105);
             //records(recode);
-
+            
             #if __IOS__
                 var resourcePrefix = "MoniHealth.iOS.Resources.";
             #endif
@@ -72,14 +77,17 @@ namespace MoniHealth.Pages
                 }
             }
             #endregion
-            
-            var start = new DateTime(2010, 01, 01);
+
+            record = record.Where(x => x.AllDate >= TabPage.gif.start && x.AllDate <= TabPage.gif.end).ToList();
+
+
+            //var start = new DateTime(2010, 01, 01);
             // Create a random data collection
             var data = new Collection<DateValue>();
-            var date = start;
-            for (int i = 0; i <= 8; i++)
+            //var date = start;
+            foreach(var reading in record)
             {
-                data.Add(new DateValue { Date = (new DateTime(record[i].Year, record[i].Month, record[i].Day)), Value = record[i].Systolic });
+                data.Add(new DateValue { Date = reading.AllDate, Value = reading.Systolic });
             }
 
             var plotModel1 = new PlotModel() { Title = "Systolic" };
@@ -113,7 +121,7 @@ namespace MoniHealth.Pages
                 ItemsSource = data
             };
             plotModel1.Series.Add(lineSeries1);
-
+            
 
             try
             {

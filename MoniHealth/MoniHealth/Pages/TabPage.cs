@@ -9,8 +9,8 @@ namespace MoniHealth.Pages
 {
 	public class TabPage : TabbedPage
 	{
-
-		public TabPage ()
+        public static GraphsPage gif = new GraphsPage();
+        public TabPage ()
         {
             var navigationPage = new NavigationPage();
             //navigationPage.Icon = "something.png";
@@ -18,7 +18,7 @@ namespace MoniHealth.Pages
             
 
             Children.Add(new MainPage());
-            Children.Add(new GraphsPage());
+            Children.Add(gif);
             Children.Add(new SettingsPage());
             //Children.Add(new SimpleCirclePage());
             NavigationPage.SetHasNavigationBar(this, false);

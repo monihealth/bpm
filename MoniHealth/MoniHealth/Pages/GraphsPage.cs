@@ -20,6 +20,7 @@ namespace MoniHealth.Pages
 
     public class GraphsPage : ContentPage
     {
+        //GraphsPage gif = new GraphsPage();
         private BPMRecords Last = new BPMRecords();
         Label typeOfGraphs = new Label() { FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)) };
         List<BPMRecords> Allrecord = new List<BPMRecords>();
@@ -27,7 +28,8 @@ namespace MoniHealth.Pages
         Label specificDates = new Label { Text = "", FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)) };
         public DateTime start;
         public DateTime end;
-        Label startlable = new Label() { Text = "" };
+        public Label startlable = new Label() { Text = "" };
+        public Label endlable = new Label() { Text = "" };
 
         public class StartAndEnding
         {
@@ -260,7 +262,6 @@ namespace MoniHealth.Pages
                         FontSize = Device.GetNamedSize (NamedSize.Medium, typeof(Label)),
                     FontAttributes = FontAttributes.Bold}*/
                     /*chart1,*/ Lastest,
-                    startlable,
                     new StackLayout(){ HorizontalOptions = LayoutOptions.Start,
                     Orientation = StackOrientation.Horizontal, Children={Start, StartDate}},
                     new StackLayout(){ HorizontalOptions = LayoutOptions.Start,
@@ -286,6 +287,7 @@ namespace MoniHealth.Pages
 
         void SubmitButton(object sender, EventArgs e)
         {
+            specificDates.Text = "";
             record = Allrecord.Where(x => x.AllDate >= start && x.AllDate <= end).ToList();
             foreach (var reading in record)
             {
@@ -303,21 +305,13 @@ namespace MoniHealth.Pages
         {
             var picker = (DatePicker)sender;
             end = picker.Date;
+            endlable.Text = end.ToShortDateString();
         }
 
         async void ViewGraphButton(object sender, EventArgs e)
         {
-
-            /*var contact = new Dates
-            {
-            StartingDate = start.ToShortDateString(),
-            EndingDate = end.ToShortDateString()
-            };
-            */
-            //var started = new StartAndEnding { Date1 = start.ToShortDateString(), Date2 =end.ToShortDateString() };
-            //var simp = new SimpleCirclePage();
-            //simp.BindingContext = contact;
-            await Navigation.PushAsync(new SimpleCirclePage());
+            var simp = new SimpleCirclePage();
+            await Navigation.PushAsync(simp);
         }
 
         void TypeOfGraphChanged(object sender, EventArgs e)
