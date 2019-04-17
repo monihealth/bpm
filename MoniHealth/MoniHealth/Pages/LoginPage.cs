@@ -25,7 +25,7 @@ namespace MoniHealth.Pages
             Email = new Entry
             {
                 Keyboard = Keyboard.Email,
-                FontSize = 10,
+                FontSize = 13,
                 Placeholder = "Enter email address",
                 VerticalOptions = LayoutOptions.CenterAndExpand,
             };
@@ -33,7 +33,7 @@ namespace MoniHealth.Pages
             Password = new Entry
             {
                 Keyboard = Keyboard.Text,
-                FontSize = 10,
+                FontSize = 13,
                 Placeholder = "Enter password",
                 IsPassword = true,
                 VerticalOptions = LayoutOptions.CenterAndExpand
@@ -41,17 +41,19 @@ namespace MoniHealth.Pages
 
             Button loginButton = new Button
             {
-                Text = "Login",
+                Text = "  Login  ",
                 Font = Font.SystemFontOfSize(NamedSize.Small),
                 BorderWidth = 1,
+                BorderColor = Color.LightGray,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.CenterAndExpand
             };
             Button createButton = new Button
             {
-                Text = "Create Account",
+                Text = "  Create Account  ",
                 Font = Font.SystemFontOfSize(NamedSize.Small),
                 BorderWidth = 1,
+                BorderColor = Color.LightGray,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.CenterAndExpand
             };

@@ -25,48 +25,49 @@ namespace MoniHealth.Pages
             fName = new Entry
             {
                 Keyboard = Keyboard.Text,
-                FontSize = 10,
+                FontSize = 11,
                 Placeholder = "Enter First Name",
-                VerticalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.Center,
             };
             lName = new Entry
             {
                 Keyboard = Keyboard.Email,
-                FontSize = 10,
+                FontSize = 11,
                 Placeholder = "Enter Last Name",
-                VerticalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.Center,
             };
             Email = new Entry
             {
                 Keyboard = Keyboard.Email,
-                FontSize = 10,
+                FontSize = 11,
                 Placeholder = "Enter email address",
-                VerticalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.Center,
             };
             Password = new Entry
             {
                 Keyboard = Keyboard.Text,
-                FontSize = 10,
+                FontSize = 11,
                 Placeholder = "Enter password",
                 IsPassword = true,
-                VerticalOptions = LayoutOptions.CenterAndExpand
+                VerticalOptions = LayoutOptions.Center
             };
             Confirm = new Entry
             {
                 Keyboard = Keyboard.Text,
-                FontSize = 10,
+                FontSize = 11,
                 Placeholder = "ReEnter password",
                 IsPassword = true,
-                VerticalOptions = LayoutOptions.CenterAndExpand
+                VerticalOptions = LayoutOptions.Center
             };
 
             Button createButton = new Button
             {
-                Text = "Create Account",
+                Text = "  Create Account  ",
                 Font = Font.SystemFontOfSize(NamedSize.Small),
                 BorderWidth = 1,
+                BorderColor = Color.Silver,
                 HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.CenterAndExpand
+                VerticalOptions = LayoutOptions.Center
             };
             createButton.Clicked += OnButtonClicked;
 
