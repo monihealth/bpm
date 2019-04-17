@@ -26,6 +26,8 @@ namespace MoniHealth.Pages
         {
             public DateTime Date { get; set; }
             public double Value { get; set; }
+            public double Value2 { get; set; }
+            public double Value3 { get; set; }
         }
 
         public SimpleCirclePage()
@@ -84,16 +86,54 @@ namespace MoniHealth.Pages
             //var start = new DateTime(2010, 01, 01);
             // Create a random data collection
             var data = new Collection<DateValue>();
+            var dataType2 = new Collection<DateValue>();
+            var dataType3 = new Collection<DateValue>();
+            string titleString="";
             //var date = start;
-            foreach(var reading in record)
+            /*foreach(var reading in record)
             {
                 data.Add(new DateValue { Date = reading.AllDate, Value = reading.Systolic });
+            }*/
+            switch (TabPage.gif.Graphs)
+            {
+                case 0:
+                    foreach(var reading in record)
+                    {
+                        data.Add(new DateValue { Date = reading.AllDate, Value = reading.Systolic });
+                    }
+                    titleString = "Systolic";
+                    break;
+                case 1:
+                    foreach (var reading in record)
+                    {
+                        data.Add(new DateValue { Date = reading.AllDate, Value = reading.Diastolic });
+                    }
+                    titleString = "Diastolic";
+                    break;
+                case 2:
+                    foreach (var reading in record)
+                    {
+                        data.Add(new DateValue { Date = reading.AllDate, Value = reading.HeartBeat });
+                    }
+                    titleString = "HeartBeat";
+                    break;
+
+                case 3:
+                    foreach (var reading in record)
+                    {
+                        data.Add(new DateValue { Date = reading.AllDate, Value = reading.Systolic });
+                        dataType2.Add(new DateValue { Date = reading.AllDate, Value = reading.Diastolic });
+                        dataType3.Add(new DateValue { Date = reading.AllDate, Value = reading.HeartBeat });
+                    }
+                    titleString = "All";
+                    break;
             }
 
-            var plotModel1 = new PlotModel() { Title = "Systolic" };
+
+            var plotModel1 = new PlotModel() { Title = titleString };
             LinearAxis linearAxisY = new LinearAxis
             {
-                Title = "Systolic",
+                Title = titleString,
                 Position = AxisPosition.Left,
                 MajorGridlineColor = OxyColor.FromArgb(40, 100, 0, 139),
                 MajorGridlineStyle = LineStyle.Solid,
@@ -120,6 +160,30 @@ namespace MoniHealth.Pages
                 DataFieldY = "Value",
                 ItemsSource = data
             };
+
+            if (TabPage.gif.Graphs ==3)
+            {
+                var lineSeries2 = new LineSeries
+                {
+                    MarkerStroke = OxyColors.Coral,
+                    MarkerType = MarkerType.Star,
+                    StrokeThickness = 1,
+                    DataFieldX = "Date",
+                    DataFieldY = "Value",
+                    ItemsSource = dataType2
+                };
+                var lineSeries3 = new LineSeries
+                {
+                    MarkerStroke = OxyColors.AliceBlue,
+                    MarkerType = MarkerType.Diamond,
+                    StrokeThickness = 1,
+                    DataFieldX = "Date",
+                    DataFieldY = "Value",
+                    ItemsSource = dataType3
+                };
+                plotModel1.Series.Add(lineSeries2);
+                plotModel1.Series.Add(lineSeries3);
+            }
             plotModel1.Series.Add(lineSeries1);
             
 
