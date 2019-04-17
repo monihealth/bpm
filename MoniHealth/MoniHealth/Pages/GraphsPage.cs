@@ -32,6 +32,21 @@ namespace MoniHealth.Pages
         Label avgOfLastTen = new Label() { Text= "", FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)) };
         int count = 0;
 
+        Button Input;
+        DateTime inputDate;
+        Label inputDateString;
+        Label inputTimeString;
+        TimePicker inputTimePicker;
+        DatePicker inputDatePicker;
+        Entry inputSystolic;
+        Entry inputDiastolic;
+        Entry inputHeartBeat;
+        Button SubmitInput;
+        StackLayout inputStack = new StackLayout()
+        { VerticalOptions = LayoutOptions.StartAndExpand,
+            Orientation = StackOrientation.Vertical,
+        };
+
         public GraphsPage()
         {
             Title = "BP Readings";
@@ -90,27 +105,30 @@ namespace MoniHealth.Pages
             var Start = new Label { Text = "Start Date:", FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)), VerticalOptions = LayoutOptions.Center };
             DatePicker StartDate = new DatePicker
             {
-                MinimumDate = new DateTime(2018, 1, 1),
-                MaximumDate = new DateTime(2019, 12, 31),
+                MinimumDate =Allrecord[0].AllDate,
+                MaximumDate = Allrecord[count-1].AllDate,
                 FontSize = 15,
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
 
-                //Date = new DateTime(2018, 6, 21)
+                Date = Allrecord[0].AllDate,
+                
 
             };
+            start = StartDate.Date;
             StartDate.DateSelected += StartDateChanged;
 
             var End = new Label { Text = "End Date:  ", FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)), VerticalOptions = LayoutOptions.Center };
             DatePicker EndDate = new DatePicker
             {
-                MinimumDate = new DateTime(2018, 1, 1),
-                MaximumDate = new DateTime(2019, 12, 31),
+                MinimumDate = StartDate.Date,
+                MaximumDate = DateTime.Today,
                 FontSize = 15,
                 VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.FillAndExpand
-                //Date = new DateTime(2018, 6, 21)
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                Date = Allrecord[count - 1].AllDate
             };
+            end = EndDate.Date;
             EndDate.DateSelected += EndDateChanged;
 
             Button ViewGraph = new Button
@@ -140,10 +158,76 @@ namespace MoniHealth.Pages
             typeOfGraph.SelectedIndexChanged += TypeOfGraphChanged;
             #endregion
 
+            #region Adding data
+            Input = new Button
+            {
+                Text = "  Input  ",
+                Font = Font.SystemFontOfSize(NamedSize.Small),
+                BorderWidth = 1,
+                BorderColor = Color.Silver,
+                HorizontalOptions = LayoutOptions.Start,
+                VerticalOptions = LayoutOptions.Start
+            };
+            Input.Clicked += InputButton;
+            inputStack.Children.Add(Input);
+            inputDateString = new Label { Text = "Input Date:", FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)), VerticalOptions = LayoutOptions.Center };
+            inputDatePicker = new DatePicker
+            {
+                MinimumDate = new DateTime(2018, 1, 1),
+                MaximumDate = DateTime.Today,
+                FontSize = 15,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+
+                Date = DateTime.Today,
+
+
+            };
+            inputDate = DateTime.Today;
+
+            inputTimeString = new Label { Text = "Input Time:", FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)), VerticalOptions = LayoutOptions.Center };
+            inputTimePicker = new TimePicker
+            {
+                FontSize = 15,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+
+            };
+            inputSystolic = new Entry
+            {
+                Keyboard = Keyboard.Numeric,
+                FontSize = 13,
+                Placeholder = "Enter Systolic",
+                VerticalOptions = LayoutOptions.CenterAndExpand
+            };
+            inputDiastolic = new Entry
+            {
+                Keyboard = Keyboard.Numeric,
+                FontSize = 13,
+                Placeholder = "Enter Diastolic",
+                VerticalOptions = LayoutOptions.CenterAndExpand
+            };
+            inputHeartBeat = new Entry
+            {
+                Keyboard = Keyboard.Numeric,
+                FontSize = 13,
+                Placeholder = "Enter HeartBeat",
+                VerticalOptions = LayoutOptions.CenterAndExpand
+            };
+            SubmitInput = new Button
+            {
+                Text = "  Submit Input  ",
+                Font = Font.SystemFontOfSize(NamedSize.Small),
+                BorderWidth = 1,
+                BorderColor = Color.Silver,
+                HorizontalOptions = LayoutOptions.Start,
+                VerticalOptions = LayoutOptions.Start
+            };
+            SubmitInput.Clicked += SubInputButton;
+            #endregion
+
 
             avgOfLastTen.Text = AverageLastTen();
-            //avgOfLastTen.Text = Allrecord[count - 1].AllDateToString();
-
 
             Lastest.Text = Allrecord[count - 1].readingToString();
 
@@ -252,7 +336,8 @@ namespace MoniHealth.Pages
                     Orientation = StackOrientation.Horizontal, Children={Start, StartDate}},
                     new StackLayout(){ HorizontalOptions = LayoutOptions.FillAndExpand,
                     Orientation = StackOrientation.Horizontal, Children={End, EndDate} },
-                    typeOfGraphs, typeOfGraph, Submit, ViewGraph, avgOfSD, specificDates, //editor 
+                    typeOfGraphs, typeOfGraph, Submit, ViewGraph, avgOfSD, specificDates,
+                    inputStack
                 }
             };
 
@@ -306,8 +391,12 @@ namespace MoniHealth.Pages
                 avgDBP = avgDBP + (int)reading.Diastolic;
                 counter++;
             }
-            avgSBP = avgSBP / counter;
-            avgDBP = avgDBP / counter;
+            if (counter>0)
+            {
+                avgSBP = avgSBP / counter;
+                avgDBP = avgDBP / counter;
+            }
+            
             avgOfSD.Text = "Average Blood Pressure between \n" + start.ToShortDateString()
                 + " and " + end.ToShortDateString() + ": \n" + avgSBP.ToString()+"/"+ avgDBP.ToString()+" mmHg";
         }
@@ -320,6 +409,10 @@ namespace MoniHealth.Pages
         void EndDateChanged(object sender, EventArgs e)
         {
             var picker = (DatePicker)sender;
+            if (picker.Date< start)
+            {
+                picker.Date = start;
+            }
             end = picker.Date;
         }
 
@@ -340,6 +433,36 @@ namespace MoniHealth.Pages
                 Graphs = picker.SelectedIndex;
             }
         }
+
+
+
+        void InputButton(object sender, EventArgs e)
+        {
+            inputStack.Children.RemoveAt(0);
+            inputStack.Children.Add(inputDateString);
+            inputStack.Children.Add(inputDatePicker);
+            inputStack.Children.Add(inputTimeString);
+            inputStack.Children.Add(inputTimePicker);
+            inputStack.Children.Add(inputSystolic);
+            inputStack.Children.Add(inputDiastolic);
+            inputStack.Children.Add(inputHeartBeat);
+            inputStack.Children.Add(SubmitInput);
+        }
+
+        void SubInputButton(object sender, EventArgs e)
+        {
+            inputStack.Children.Clear();
+            inputStack.Children.Add(Input);
+            
+        }
+
+
+
+
+
+
+
+
     }
 
 
