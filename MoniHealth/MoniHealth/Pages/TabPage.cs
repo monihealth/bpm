@@ -20,6 +20,7 @@ namespace MoniHealth.Pages
             Children.Add(new MainPage());
             Children.Add(gif);
             Children.Add(new SettingsPage());
+            Children.Add(new BluetoothTestPage());
             //Children.Add(new SimpleCirclePage());
             NavigationPage.SetHasNavigationBar(this, false);
             base.OnAppearing();

@@ -1,6 +1,9 @@
 ﻿using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using MoniHealth.Pages;
 
 
@@ -18,7 +21,9 @@ namespace MoniHealth
 
         protected override void OnStart()
         {
-            // Handle when your app starts
+            AppCenter.Start("android=77f7c402-c578-48bb-b3cb-d94b40cda896;" +
+                  "ios={Your iOS App secret here}",
+                  typeof(Analytics), typeof(Crashes));
         }
 
         protected override void OnSleep()
