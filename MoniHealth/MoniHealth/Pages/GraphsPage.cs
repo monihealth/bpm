@@ -184,7 +184,7 @@ namespace MoniHealth.Pages
 
             };
             inputDate = DateTime.Today;
-
+            inputDatePicker.DateSelected += InputDateChanged;
             inputTimeString = new Label { Text = "Input Time:", FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)), VerticalOptions = LayoutOptions.Center };
             inputTimePicker = new TimePicker
             {
@@ -193,6 +193,9 @@ namespace MoniHealth.Pages
                 HorizontalOptions = LayoutOptions.FillAndExpand,
 
             };
+            //inputTimePicker.SetBinding(TimePicker.TimeProperty, "StartTime");
+            inputTimePicker.PropertyChanged += InputTimeChanged;
+
             inputSystolic = new Entry
             {
                 Keyboard = Keyboard.Numeric,
@@ -436,6 +439,8 @@ namespace MoniHealth.Pages
 
 
 
+
+
         void InputButton(object sender, EventArgs e)
         {
             inputStack.Children.RemoveAt(0);
@@ -449,16 +454,24 @@ namespace MoniHealth.Pages
             inputStack.Children.Add(SubmitInput);
         }
 
+        void InputDateChanged(object sender, EventArgs e)
+        {
+            var picker = (DatePicker)sender;
+            inputDate = picker.Date;
+        }
+        void InputTimeChanged(object sender, EventArgs e)
+        {
+            var picker = (TimePicker)sender;
+            inputDate = inputDate.Add(picker.Time);
+        }
         void SubInputButton(object sender, EventArgs e)
         {
             inputStack.Children.Clear();
+            var newda = new Label() {Text = inputDate.ToShortDateString()+ inputDate.ToShortTimeString() };
             inputStack.Children.Add(Input);
-            
+            inputStack.Children.Add(newda);
+
         }
-
-
-
-
 
 
 
