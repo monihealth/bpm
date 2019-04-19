@@ -16,7 +16,7 @@ namespace MoniHealth.Pages
 {
     public class BluetoothTestPage : ContentPage
     {
-
+        Label texxt = new Label() { Text = ""};
         IAdapter adapter;
         IBluetoothLE bluetoothBLE;
         ObservableCollection<IDevice> deviceList;
@@ -84,6 +84,7 @@ namespace MoniHealth.Pages
                     new Label { Text = "Test Page" },
                     scanButton,
                     //devicesList,
+                    texxt,
                     connectButton
                 }
             };
@@ -91,14 +92,18 @@ namespace MoniHealth.Pages
             {
                 //Request Location Permissions
                 var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+                
                 if (status != PermissionStatus.Granted)
                 {
                     if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
+                    {
                         await DisplayAlert("Location permissions required for bluetooth", "Allow Permission", "OK");
+                        texxt.Text = status.ToString() + "hi";
+                    }
                     var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
                     if (results.ContainsKey(Permission.Location))
                         status = results[Permission.Location];
-                }
+                }/*
                 //If permissions were granted, scan for device
                 if (status == PermissionStatus.Granted)
                 {
@@ -126,7 +131,7 @@ namespace MoniHealth.Pages
                     }
                 }
                 else if (status != PermissionStatus.Unknown)
-                    await DisplayAlert("Location Denied", "Can not continue, try again", "OK");
+                    await DisplayAlert("Location Denied", "Can not continue, try again", "OK");*/
             }
 
             async void btnConnect_Clicked(object sender, EventArgs e)
