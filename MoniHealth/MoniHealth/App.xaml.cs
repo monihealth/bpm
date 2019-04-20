@@ -5,7 +5,8 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using MoniHealth.Pages;
-
+using Android.Runtime;
+using Plugin.Permissions;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace MoniHealth
@@ -35,5 +36,12 @@ namespace MoniHealth
         {
             // Handle when your app resumes
         }
+        #if __ANDROID__
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
+        {
+            PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+        #endif
     }
 }
