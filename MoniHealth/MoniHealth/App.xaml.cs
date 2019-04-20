@@ -5,8 +5,6 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using MoniHealth.Pages;
-using Android.Runtime;
-using Plugin.Permissions;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace MoniHealth
