@@ -23,6 +23,12 @@ namespace MoniHealth.Pages
         IBluetoothLE bluetoothBLE;
         ObservableCollection<IDevice> deviceList;
         IDevice device;
+        IList<IService> Services;
+        IService Service;
+        IList<ICharacteristic> Characteristics;
+        ICharacteristic Characteristic;
+        IDescriptor descriptor;
+        IList<IDescriptor> descriptors;
 
 
         public BluetoothTestPage()
@@ -37,7 +43,7 @@ namespace MoniHealth.Pages
 
             Button scanButton = new Button
             {
-                Text = "Scan",
+                Text = " Scan ",
                 Font = Font.SystemFontOfSize(NamedSize.Small),
                 BorderWidth = 1,
                 HorizontalOptions = LayoutOptions.Center,
@@ -47,7 +53,7 @@ namespace MoniHealth.Pages
 
             Button connectButton = new Button
             {
-                Text = "Connect",
+                Text = " Connect ",
                 Font = Font.SystemFontOfSize(NamedSize.Small),
                 BorderWidth = 1,
                 HorizontalOptions = LayoutOptions.Center,
@@ -55,9 +61,47 @@ namespace MoniHealth.Pages
             };
             connectButton.Clicked += btnConnect_Clicked;
 
+            Button GetServicesButton = new Button
+            {
+                Text = "GetServices",
+                Font = Font.SystemFontOfSize(NamedSize.Small),
+                BorderWidth = 1,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.CenterAndExpand
+            };
+            GetServicesButton.Clicked += btnGetServices_Clicked;
+
+            Button GetcharactersButton = new Button
+            {
+                Text = "Getcharacters",
+                Font = Font.SystemFontOfSize(NamedSize.Small),
+                BorderWidth = 1,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.CenterAndExpand
+            };
+            GetcharactersButton.Clicked += btnGetcharacters_Clicked;
+
+            Button GetdescButton = new Button
+            {
+                Text = "desc",
+                Font = Font.SystemFontOfSize(NamedSize.Small),
+                BorderWidth = 1,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.CenterAndExpand
+            };
+            GetdescButton.Clicked += btnDescriptors_Clicked;
+
+
+
+
+
+
+
+
             ListView devicesListed = new ListView
             {
                 ItemsSource = deviceList,
+                VerticalOptions = LayoutOptions.Start,
                 IsPullToRefreshEnabled = true,
                 ItemTemplate = new DataTemplate(() =>
                 {
@@ -88,10 +132,15 @@ namespace MoniHealth.Pages
                     scanButton,
                     //devicesList,
                     texxt,
+                    connectButton,
+                    GetServicesButton,
+                    GetcharactersButton,
+                    GetdescButton,
                     devicesListed,
-                    str,
-                    devicestr,
-                    connectButton
+                    //texxt
+                    //str,
+                    //devicestr,
+                    //connectButton
                 }
             };
 
@@ -100,7 +149,7 @@ namespace MoniHealth.Pages
                 //Request Location Permissions
                 var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
 
-                /* if (status != PermissionStatus.Granted)
+                 if (status != PermissionStatus.Granted)
                  {
                      if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
                      {
@@ -112,7 +161,7 @@ namespace MoniHealth.Pages
                      {
                          status = results[Permission.Location];
                      }
-                 }*/
+                 }
                 //If permissions were granted, scan for device
                 if (status == PermissionStatus.Granted)
                 {
@@ -222,6 +271,90 @@ namespace MoniHealth.Pages
                     await DisplayAlert(" Error ", ex.Message, " OK ");
                 }
             }
+
+            
+
+            async void btnGetServices_Clicked(object sender, EventArgs e)
+            {
+
+                Services = await device.GetServicesAsync();
+                // Service = await device.GetServiceAsync(Guid.Parse("guid")); 
+                //or we call the Guid of selected Device
+
+                Service = await device.GetServiceAsync(device.Id);
+
+                foreach (var ser in Services)
+                {
+                    texxt.Text = texxt.Text + " \n" + ser.Name ;
+                }
+            }
+
+
+            async void btnGetcharacters_Clicked(object sender, EventArgs e)
+            {
+                //Characteristics = await Services[0].GetCharacteristicsAsync();
+                foreach (var ser in Services)
+                {
+                    Characteristics = await ser.GetCharacteristicsAsync();
+                    foreach (var car in Characteristics)
+                    {
+                        //var idGuid = car.Id;
+                        //Characteristic = await Service.GetCharacteristicAsync(idGuid);
+                        //  Characteristic.CanRead
+                        texxt.Text = texxt.Text + " \n" + car.Name;
+                    }
+                }
+                /*foreach (var ser in Characteristics)
+                {
+                    texxt.Text = texxt.Text + " \n" + ser.Name;
+                }*/
+            }
+
+            
+            
+            async void btnDescriptors_Clicked(object sender, EventArgs e)
+            {
+                foreach (var ser in Services)
+                {
+                    Characteristics = await ser.GetCharacteristicsAsync();
+                    foreach (var car in Characteristics)
+                    {
+                        descriptors = await car.GetDescriptorsAsync();
+                        foreach (var des in descriptors)
+                        {
+                            texxt.Text = texxt.Text + " \n" + des.Name;
+                        }
+                        
+
+                    }
+                }
+                //descriptors = await Characteristic.GetDescriptorsAsync();
+
+
+
+
+
+
+                //descriptor = await Characteristic.GetDescriptorAsync(Guid.Parse("guid"));
+
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
     }
 }
