@@ -16,11 +16,14 @@ namespace MoniHealth.Pages
 {
     public class BluetoothTestPage : ContentPage
     {
-
+        Label texxt = new Label() { Text = "" };
+        Label devicestr = new Label() { Text = "" };
+        Label str = new Label() { Text = "" };
         IAdapter adapter;
         IBluetoothLE bluetoothBLE;
         ObservableCollection<IDevice> deviceList;
         IDevice device;
+
 
         public BluetoothTestPage()
         {
@@ -29,6 +32,8 @@ namespace MoniHealth.Pages
             adapter = CrossBluetoothLE.Current.Adapter;
 
             deviceList = new ObservableCollection<IDevice>();
+            //lv.ItemsSource = deviceList;
+
 
             Button scanButton = new Button
             {
@@ -50,33 +55,31 @@ namespace MoniHealth.Pages
             };
             connectButton.Clicked += btnConnect_Clicked;
 
-            //ListView devicesList = new ListView
-            //{
-            //    ItemsSource = deviceList,
-            //    IsPullToRefreshEnabled = true,
-            //    ItemTemplate = new DataTemplate(() =>
-            //    {
-            //        Label nameLabel = new Label();
-            //        nameLabel.SetBinding(Label.TextProperty, device.Name);
-
-            //        Label addressLabel = new Label();
-            //        addressLabel.SetBinding(Label.TextProperty, "test");
-
-            //        return new ViewCell
-            //        {
-            //            View = new StackLayout
-            //            {
-            //                Padding = new Thickness(0, 5),
-            //                Children =
-            //                {
-            //                nameLabel,
-            //                //addressLabel
-            //                }
-            //            }
-            //        };
-            //    }),
-            //};
-            //deviceList.ItemSelected += DevicesList_OnItemSelected;
+            ListView devicesListed = new ListView
+            {
+                ItemsSource = deviceList,
+                IsPullToRefreshEnabled = true,
+                ItemTemplate = new DataTemplate(() =>
+                {
+                    Label nameLabel = new Label() { };
+                    nameLabel.SetBinding(Label.TextProperty, "Name");
+                    //Label addressLabel = new Label();
+                    //addressLabel.SetBinding(Label.TextProperty, "Id");
+                    return new ViewCell
+                    {
+                        View = new StackLayout
+                        {
+                            //Padding = new Thickness(0, 5),
+                            Children =
+                            {
+                                nameLabel,
+                                //addressLabel
+                            }
+                        }
+                    };
+                }),
+            };
+            devicesListed.ItemSelected += DevicesList_OnItemSelected;
 
             Content = new StackLayout
             {
@@ -84,21 +87,32 @@ namespace MoniHealth.Pages
                     new Label { Text = "Test Page" },
                     scanButton,
                     //devicesList,
+                    texxt,
+                    devicesListed,
+                    str,
+                    devicestr,
                     connectButton
                 }
             };
+
             async void btnScan_Clicked(object sender, EventArgs e)
             {
                 //Request Location Permissions
                 var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
-                if (status != PermissionStatus.Granted)
-                {
-                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
-                        await DisplayAlert("Location permissions required for bluetooth", "Allow Permission", "OK");
-                    var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
-                    if (results.ContainsKey(Permission.Location))
-                        status = results[Permission.Location];
-                }
+
+                /* if (status != PermissionStatus.Granted)
+                 {
+                     if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
+                     {
+                         await DisplayAlert("Location permissions required for bluetooth", "Allow Permission", "OK");
+                        //need to add a no option 
+                     }
+                     var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
+                     if (results.ContainsKey(Permission.Location))
+                     {
+                         status = results[Permission.Location];
+                     }
+                 }*/
                 //If permissions were granted, scan for device
                 if (status == PermissionStatus.Granted)
                 {
@@ -112,21 +126,53 @@ namespace MoniHealth.Pages
                         deviceList.Clear();
                         //adapter.ScanTimeout = 10000;
                         adapter.ScanMode = ScanMode.Balanced;
-                        await adapter.StartScanningForDevicesAsync();
+                        //await adapter.StartScanningForDevicesAsync();
                         adapter.DeviceDiscovered += (obj, a) =>
                         {
-                            if (!deviceList.Contains(a.Device))
+                            if (!deviceList.Contains(a.Device) && a.Device.Name != null)
+                            {
                                 deviceList.Add(a.Device);
+
+                            }
                             // deviceList.Add(a.Device);
                         };
-                        await adapter.StartScanningForDevicesAsync();
+                        /*foreach (var str1 in deviceList)
                         {
-                            await adapter.ConnectToDeviceAsync(device);
+                            str.Text = str.Text + str1.Name; 
                         }
+                        devicestr.Text = "Done";*/
+
+                        if (!bluetoothBLE.Adapter.IsScanning)
+                        {
+                            await adapter.StartScanningForDevicesAsync();
+
+
+                        }
+
+                        /*foreach (var str1 in deviceList)
+                        {
+                            if (str1.Name != null)
+                            {  }
+                            str.Text = str.Text + str1.Name + "LOve";
+                        }
+                        devicestr.Text = "Done";*/
+                        /*{
+                            try
+                            {
+                                await adapter.ConnectToDeviceAsync(device);
+                            }
+                            catch (DeviceConnectionException)
+                            {
+                                await DisplayAlert(" Attention ", " Null device ", " OK ");
+                            }
+                            texxt.Text = texxt.Text + status.ToString() + "hi";
+                        }*/
                     }
                 }
                 else if (status != PermissionStatus.Unknown)
+                {
                     await DisplayAlert("Location Denied", "Can not continue, try again", "OK");
+                }
             }
 
             async void btnConnect_Clicked(object sender, EventArgs e)
@@ -152,13 +198,16 @@ namespace MoniHealth.Pages
 
             async void DevicesList_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
             {
-                //device = devicesList.SelectedItem as IDevice;
+                device = devicesListed.SelectedItem as IDevice;
 
                 var result = await DisplayAlert(" WARNING ", " Do you want to connect to this device? ", " Connect ", " Cancel ");
-
+                //texxt.Text = texxt.Text +"hi";
                 if (!result)
+                {
+                    //texxt.Text = texxt.Text + "hi2";
                     return;
 
+                }
                 // Stop Scanner
                 await adapter.StopScanningForDevicesAsync();
 
