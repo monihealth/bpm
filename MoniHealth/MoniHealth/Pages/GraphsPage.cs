@@ -328,7 +328,7 @@ namespace MoniHealth.Pages
             {
 
                 Margin = new Thickness(20),
-                VerticalOptions = LayoutOptions.StartAndExpand,
+                VerticalOptions = LayoutOptions.FillAndExpand,
                 Children =
                 {
                     /*new Label { Text = (recode[0].ToStringArray()),
