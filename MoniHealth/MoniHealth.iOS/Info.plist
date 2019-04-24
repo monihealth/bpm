@@ -24,8 +24,10 @@
 	<string>Location service is required to find the device.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location service is required to find the device.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Program requires GPS to track cars and job orders</string>
 	<key>MinimumOSVersion</key>
-	<string>8.0</string>
+	<string>12.2</string>
 	<key>CFBundleDisplayName</key>
 	<string>MoniHealth</string>
 	<key>CFBundleIdentifier</key>
