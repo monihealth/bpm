@@ -96,12 +96,12 @@ namespace MoniHealth.Pages
                 //For now just sends to next page'
 		 var emailPattern = (@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
                 if (Email.Text == null || Password.Text == null)
-                    DisplayAlert("Login", "Login unsuccessful: Empty email or password", "OK");
+                    LoginUnsuccessful();
                 else
                     if (Regex.IsMatch(Email.Text, emailPattern))
-                    App.Current.MainPage = new NavigationPage(new TabPage());
+                    Application.Current.MainPage = new NavigationPage(new TabPage());
                 else
-                    DisplayAlert("Invalid email format", "Please enter a valid email address", "OK");
+                    InvalidEmail();
                 // await MainPage = new NavigationPage(new PrimaryPage());
                 //App.Current.MainPage = new NavigationPage();
                 //await Navigation.PushAsync(new PrimaryPage());
@@ -113,11 +113,13 @@ namespace MoniHealth.Pages
             {
                 await Navigation.PushAsync(new AccountCreationPage());
             }
-
-
-
-
-
         }
+	private void LoginUnsuccessful()
+	{
+	DisplayAlert("Login", "Login unsuccessful: Empty email or password", "OK");
+	}
+	private void InvalidEmail()
+	{
+	DisplayAlert("Invalid email format", "Please enter a valid email address", "OK");
 	}
 }
