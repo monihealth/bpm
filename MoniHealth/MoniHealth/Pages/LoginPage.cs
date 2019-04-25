@@ -106,7 +106,7 @@ namespace MoniHealth.Pages
                 //App.Current.MainPage = new NavigationPage();
                 //await Navigation.PushAsync(new PrimaryPage());
 
-                App.Current.MainPage = new NavigationPage(new TabPage());
+                
             }
 
             async void OnCreateBtnClicked(object sender, EventArgs e)
