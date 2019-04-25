@@ -5,6 +5,7 @@ using System.Text;
 using Xamarin.Forms;
 using MoniHealth.Pages;
 using MoniHealth;
+using System.Text.RegularExpressions;
 
 namespace MoniHealth.Pages
 {
@@ -89,11 +90,22 @@ namespace MoniHealth.Pages
                 }
             };
 
-            async void OnButtonClicked(object sender, EventArgs e)
+            void OnButtonClicked(object sender, EventArgs e)
             {
                 //create an account through the galen cloud and then return to the login page
-
-                await Navigation.PopAsync();
+                var emailPattern = (@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+                if (Email.Text == null || Password.Text == null || fName.Text == null || lName.Text == null ||
+                    Confirm.Text == null)
+                    DisplayAlert("Error!", "Please fill out all the fields.", "OK");
+                else
+                    if (Password.Text != Confirm.Text)
+                    DisplayAlert("Error!", "Make sure that the passwords match", "OK");
+                else
+                    if (Regex.IsMatch(Email.Text, emailPattern))
+                    Navigation.PopAsync();
+                else
+                    DisplayAlert("Error!", "Please enter a valid email address", "OK");
+                
 
                 // await MainPage = new NavigationPage(new PrimaryPage());
                 //App.Current.MainPage = new NavigationPage();
