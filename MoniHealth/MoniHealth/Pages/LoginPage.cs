@@ -5,6 +5,7 @@ using System.Text;
 using Xamarin.Forms;
 using MoniHealth.Pages;
 using MoniHealth;
+using System.Text.RegularExpressions;
 
 namespace MoniHealth.Pages
 {
