@@ -47,6 +47,8 @@ namespace MoniHealth.Pages
             Orientation = StackOrientation.Vertical,
         };
 
+        public ChartView MainChart = new ChartView();
+
         public GraphsPage()
         {
             Title = "BP Readings";
@@ -330,17 +332,20 @@ namespace MoniHealth.Pages
 
             List<Microcharts.Entry> minientries = new List<Microcharts.Entry> { };
             double findmin = 300;
-            for (int i = 0; i <= 7; i++)
+            int m = 0;
+            var recordmini = Allrecord.Where(x => x.AllDate >= Allrecord[count - 10].AllDate && x.AllDate <= Allrecord[count-1].AllDate).ToList();
+            foreach (var reading in recordmini)
             {
-                minientries.Add(new Microcharts.Entry((float)Allrecord[i].Systolic));
-                minientries[i].Label = Allrecord[i].AllDate.ToShortDateString();
-                minientries[i].ValueLabel = Allrecord[i].Systolic.ToString();
-                minientries[i].Color = SKColor.Parse("#FF1493");
 
+                minientries.Add(new Microcharts.Entry((float)reading.Systolic));
+                minientries[m].Label = reading.AllDate.ToShortDateString();
+                minientries[m].ValueLabel = reading.Systolic.ToString();
+                minientries[m].Color = SKColor.Parse("#FF1493");
+                m++;
 
-                if (findmin >= Allrecord[i].Systolic)
+                if (findmin >= reading.Systolic)
                 {
-                    findmin = Allrecord[i].Systolic;
+                    findmin = reading.Systolic;
                 }
             }
 
@@ -366,8 +371,7 @@ namespace MoniHealth.Pages
             }*/
             #endregion
 
-
-
+            MainChart = chart1;
 
             StackLayout stackLayout = new StackLayout
             {
@@ -379,13 +383,13 @@ namespace MoniHealth.Pages
                     /*new Label { Text = (recode[0].ToStringArray()),
                         FontSize = Device.GetNamedSize (NamedSize.Medium, typeof(Label)),
                     FontAttributes = FontAttributes.Bold}*/
-                    /*chart1,*/ Lastest, avgOfLastTen,
+                    chart1, Lastest, avgOfLastTen,
                     new StackLayout(){ HorizontalOptions = LayoutOptions.FillAndExpand,
                     Orientation = StackOrientation.Horizontal, Children={Start, StartDate}},
                     new StackLayout(){ HorizontalOptions = LayoutOptions.FillAndExpand,
                     Orientation = StackOrientation.Horizontal, Children={End, EndDate} },
                     typeOfGraphs, typeOfGraph, Submit, ViewGraph, avgOfSD, specificDates,
-                    inputStack, chart1
+                    inputStack
                 }
             };
            
@@ -396,8 +400,6 @@ namespace MoniHealth.Pages
                 Margin = new Thickness(0, 0, 0, 10)
 
             };
-
-
         }
 
         public string AverageLastTen()
@@ -419,7 +421,6 @@ namespace MoniHealth.Pages
             avgDBP = avgDBP / counter;
             return ("Average Blood Pressure of last 10 \n" +  "readings: " + avgSBP.ToString() + "/" + avgDBP.ToString() + " mmHg");
         }
-
 
         public object[] LastRecord()
         {
@@ -483,10 +484,6 @@ namespace MoniHealth.Pages
             }
         }
 
-
-
-
-
         void InputButton(object sender, EventArgs e)
         {
             inputStack.Children.RemoveAt(0);
@@ -518,12 +515,6 @@ namespace MoniHealth.Pages
             inputStack.Children.Add(newda);
 
         }
-
-
-
-
     }
-
-
 }
 
