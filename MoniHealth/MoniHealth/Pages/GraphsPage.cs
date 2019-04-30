@@ -324,6 +324,66 @@ namespace MoniHealth.Pages
             }*/
             #endregion
 
+            #region mini graph
+            List<Microcharts.Entry> entries = new List<Microcharts.Entry> 
+              {new Microcharts.Entry((float)record[count-8].Systolic)
+                {
+                    Color = SKColor.Parse("#FF1493"),
+                    Label = record[count-8].AllDate.ToShortDateString(),
+                    ValueLabel = record[count - 2].Systolic.ToString()
+                },
+
+            new Microcharts.Entry((float)record[count-1].Systolic)
+                {
+                    Color = SKColor.Parse("#AA1493"),
+                    Label = record[count-1].AllDate.ToShortDateString(),
+                    ValueLabel = record[count - 1].Systolic.ToString()
+                }
+
+            };
+
+            List<Microcharts.Entry> minientries = new List<Microcharts.Entry> { };
+            double findmin = 300;
+            for (int i = 0; i <= 7; i++)
+            {
+                minientries.Add(new Microcharts.Entry((float)record[i].Systolic));
+                minientries[i].Label = record[i].AllDate.ToShortDateString();
+                minientries[i].ValueLabel = record[i].Systolic.ToString();
+                minientries[i].Color = SKColor.Parse("#FF1493");
+
+
+                if (findmin >= record[i].Systolic)
+                {
+                    findmin = record[i].Systolic;
+                }
+            }
+
+
+
+            ChartView chart1 = new ChartView
+            {
+                Chart = new LineChart { Entries = minientries, MinValue = (int)findmin,  },
+                HeightRequest = 160,
+                //Chart.DrawCaptionElements()
+
+            };
+
+            /*try
+            {
+                Content = chart1;
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException != null)
+                {
+                    string err = e.InnerException.Message;
+                }
+            }*/
+            #endregion
+
+
+
+
             StackLayout stackLayout = new StackLayout
             {
 
@@ -340,7 +400,7 @@ namespace MoniHealth.Pages
                     new StackLayout(){ HorizontalOptions = LayoutOptions.FillAndExpand,
                     Orientation = StackOrientation.Horizontal, Children={End, EndDate} },
                     typeOfGraphs, typeOfGraph, Submit, ViewGraph, avgOfSD, specificDates,
-                    inputStack
+                    inputStack, chart1
                 }
             };
 
