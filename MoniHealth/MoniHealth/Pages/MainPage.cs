@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using Xamarin.Forms;
+using Microcharts.Forms;
 
 namespace MoniHealth.Pages
 {
@@ -17,6 +18,9 @@ namespace MoniHealth.Pages
             //BPMRecords record = new BPMRecords();
             GraphsPage gif = new GraphsPage();
             Object[] Last = gif.LastRecord();
+
+            ChartView minichart = new ChartView();
+            minichart = gif.MainChart;
 
             string bpmStatus = (bloodpressurestatus( Double.Parse(Last[4].ToString()) , Double.Parse(Last[5].ToString())) );
 
@@ -37,7 +41,7 @@ namespace MoniHealth.Pages
                     new Label {Text ="" },
                     new Label { Text = ("Your most recent blood pressure result was " + Last[4] + " / " + Last[5]) },
                     new Label { Text = ("Your blood pressure is " + bpmStatus)},
-                    Lastest
+                    Lastest, minichart
                 }
             };
 

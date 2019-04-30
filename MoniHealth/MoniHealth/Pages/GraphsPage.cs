@@ -47,6 +47,8 @@ namespace MoniHealth.Pages
             Orientation = StackOrientation.Vertical,
         };
 
+        public ChartView MainChart = new ChartView();
+
         public GraphsPage()
         {
             Title = "BP Readings";
@@ -366,7 +368,7 @@ namespace MoniHealth.Pages
             }*/
             #endregion
 
-
+            MainChart = chart1;
 
 
             StackLayout stackLayout = new StackLayout
