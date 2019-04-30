@@ -34,15 +34,18 @@ namespace MoniHealth.Pages
 
         Button Input;
         DateTime inputDate;
+        Label inputDateString;
+        Label inputTimeString;
         TimePicker inputTimePicker;
         DatePicker inputDatePicker;
+        Entry inputSystolic;
+        Entry inputDiastolic;
+        Entry inputHeartBeat;
         Button SubmitInput;
         StackLayout inputStack = new StackLayout()
         { VerticalOptions = LayoutOptions.StartAndExpand,
             Orientation = StackOrientation.Vertical,
         };
-
-        public ChartView MainChart = new ChartView();
 
         public GraphsPage()
         {
@@ -322,6 +325,8 @@ namespace MoniHealth.Pages
             #endregion
 
             #region mini graph
+           
+
 
             List<Microcharts.Entry> minientries = new List<Microcharts.Entry> { };
             double findmin = 300;
@@ -331,6 +336,7 @@ namespace MoniHealth.Pages
                 minientries[i].Label = Allrecord[i].AllDate.ToShortDateString();
                 minientries[i].ValueLabel = Allrecord[i].Systolic.ToString();
                 minientries[i].Color = SKColor.Parse("#FF1493");
+
 
                 if (findmin >= Allrecord[i].Systolic)
                 {
@@ -342,14 +348,24 @@ namespace MoniHealth.Pages
 
             ChartView chart1 = new ChartView
             {
-                Chart = new LineChart { Entries = minientries, MinValue = (int)findmin },
+                Chart = new LineChart { Entries = minientries, MinValue = (int)findmin,  },
                 HeightRequest = 160,
-            };
 
+            };
+            /*
+            try
+            {
+                Content = chart1;
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException != null)
+                {
+                    string err = e.InnerException.Message;
+                }
+            }*/
             #endregion
 
-
-            MainChart = chart1;
 
 
 
@@ -369,10 +385,17 @@ namespace MoniHealth.Pages
                     new StackLayout(){ HorizontalOptions = LayoutOptions.FillAndExpand,
                     Orientation = StackOrientation.Horizontal, Children={End, EndDate} },
                     typeOfGraphs, typeOfGraph, Submit, ViewGraph, avgOfSD, specificDates,
-                    inputStack, //chart1
+                    inputStack, chart1
                 }
             };
-            
+           
+
+            Content = new ScrollView
+            {
+                Content = stackLayout,
+                Margin = new Thickness(0, 0, 0, 10)
+
+            };
 
 
         }
