@@ -34,18 +34,15 @@ namespace MoniHealth.Pages
 
         Button Input;
         DateTime inputDate;
-        Label inputDateString;
-        Label inputTimeString;
         TimePicker inputTimePicker;
         DatePicker inputDatePicker;
-        Entry inputSystolic;
-        Entry inputDiastolic;
-        Entry inputHeartBeat;
         Button SubmitInput;
         StackLayout inputStack = new StackLayout()
         { VerticalOptions = LayoutOptions.StartAndExpand,
             Orientation = StackOrientation.Vertical,
         };
+
+        public ChartView MainChart = new ChartView();
 
         public GraphsPage()
         {
@@ -325,36 +322,19 @@ namespace MoniHealth.Pages
             #endregion
 
             #region mini graph
-            List<Microcharts.Entry> entries = new List<Microcharts.Entry> 
-              {new Microcharts.Entry((float)record[count-8].Systolic)
-                {
-                    Color = SKColor.Parse("#FF1493"),
-                    Label = record[count-8].AllDate.ToShortDateString(),
-                    ValueLabel = record[count - 2].Systolic.ToString()
-                },
-
-            new Microcharts.Entry((float)record[count-1].Systolic)
-                {
-                    Color = SKColor.Parse("#AA1493"),
-                    Label = record[count-1].AllDate.ToShortDateString(),
-                    ValueLabel = record[count - 1].Systolic.ToString()
-                }
-
-            };
 
             List<Microcharts.Entry> minientries = new List<Microcharts.Entry> { };
             double findmin = 300;
             for (int i = 0; i <= 7; i++)
             {
-                minientries.Add(new Microcharts.Entry((float)record[i].Systolic));
-                minientries[i].Label = record[i].AllDate.ToShortDateString();
-                minientries[i].ValueLabel = record[i].Systolic.ToString();
+                minientries.Add(new Microcharts.Entry((float)Allrecord[i].Systolic));
+                minientries[i].Label = Allrecord[i].AllDate.ToShortDateString();
+                minientries[i].ValueLabel = Allrecord[i].Systolic.ToString();
                 minientries[i].Color = SKColor.Parse("#FF1493");
 
-
-                if (findmin >= record[i].Systolic)
+                if (findmin >= Allrecord[i].Systolic)
                 {
-                    findmin = record[i].Systolic;
+                    findmin = Allrecord[i].Systolic;
                 }
             }
 
@@ -362,25 +342,14 @@ namespace MoniHealth.Pages
 
             ChartView chart1 = new ChartView
             {
-                Chart = new LineChart { Entries = minientries, MinValue = (int)findmin,  },
+                Chart = new LineChart { Entries = minientries, MinValue = (int)findmin },
                 HeightRequest = 160,
-                //Chart.DrawCaptionElements()
-
             };
 
-            /*try
-            {
-                Content = chart1;
-            }
-            catch (Exception e)
-            {
-                if (e.InnerException != null)
-                {
-                    string err = e.InnerException.Message;
-                }
-            }*/
             #endregion
 
+
+            MainChart = chart1;
 
 
 
@@ -400,16 +369,10 @@ namespace MoniHealth.Pages
                     new StackLayout(){ HorizontalOptions = LayoutOptions.FillAndExpand,
                     Orientation = StackOrientation.Horizontal, Children={End, EndDate} },
                     typeOfGraphs, typeOfGraph, Submit, ViewGraph, avgOfSD, specificDates,
-                    inputStack, chart1
+                    inputStack, //chart1
                 }
             };
-
-            Content = new ScrollView
-            {
-                Content = stackLayout,
-                Margin = new Thickness(0, 0, 0, 10)
-
-            };
+            
 
 
         }

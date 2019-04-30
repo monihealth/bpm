@@ -9,11 +9,11 @@ using System.Text.RegularExpressions;
 
 namespace MoniHealth.Pages
 {
-	public class LoginPage : ContentPage
-	{
+    public class LoginPage : ContentPage
+    {
         Entry Email, Password;
 
-        public LoginPage ()
+        public LoginPage()
         {
             Label header = new Label
             {
@@ -66,8 +66,8 @@ namespace MoniHealth.Pages
             Padding = new Thickness(10, 0);
             Content = new StackLayout
             {
-                VerticalOptions= LayoutOptions.Center,
-                Spacing=5,
+                VerticalOptions = LayoutOptions.Center,
+                Spacing = 5,
                 Children =
                 {
                     header,
@@ -94,19 +94,19 @@ namespace MoniHealth.Pages
             {
                 //Check Login Information Later On !
                 //For now just sends to next page'
-		 var emailPattern = (@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+                var emailPattern = (@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
                 if (Email.Text == null || Password.Text == null)
                     LoginUnsuccessful();
                 else
                     if (Regex.IsMatch(Email.Text, emailPattern))
-                    Application.Current.MainPage = new NavigationPage(new TabPage());
+                    Application.Current.MainPage = new TabPage();
                 else
                     InvalidEmail();
                 // await MainPage = new NavigationPage(new PrimaryPage());
                 //App.Current.MainPage = new NavigationPage();
                 //await Navigation.PushAsync(new PrimaryPage());
 
-                
+
             }
 
             async void OnCreateBtnClicked(object sender, EventArgs e)
@@ -114,12 +114,13 @@ namespace MoniHealth.Pages
                 await Navigation.PushAsync(new AccountCreationPage());
             }
         }
-	private void LoginUnsuccessful()
-	{
-	DisplayAlert("Login", "Login unsuccessful: Empty email or password", "OK");
-	}
-	private void InvalidEmail()
-	{
-	DisplayAlert("Invalid email format", "Please enter a valid email address", "OK");
-	}
+        private void LoginUnsuccessful()
+        {
+            DisplayAlert("Login", "Login unsuccessful: Empty email or password", "OK");
+        }
+        private void InvalidEmail()
+        {
+            DisplayAlert("Invalid email format", "Please enter a valid email address", "OK");
+        }
+    }
 }

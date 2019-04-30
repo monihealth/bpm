@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microcharts.Forms;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,9 @@ namespace MoniHealth.Pages
             GraphsPage gif = new GraphsPage();
             Object[] Last = gif.LastRecord();
 
+            ChartView minichart = new ChartView();
+            minichart = gif.MainChart;
+
             var Lastest = new Label
             {
                 Text = " ",
@@ -31,7 +35,7 @@ namespace MoniHealth.Pages
             Content = new StackLayout
             {
                 Children = {
-                    new Label { Text = "Main Page" }, Lastest
+                    new Label { Text = "Main Page" }, Lastest, minichart
                 }
             };
         }
