@@ -373,6 +373,7 @@ namespace MoniHealth.Pages
 
             MainChart = chart1;
 
+
             StackLayout stackLayout = new StackLayout
             {
 

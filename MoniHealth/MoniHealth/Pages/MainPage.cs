@@ -5,6 +5,7 @@ using System.Text;
 using Microcharts.Forms;
 
 using Xamarin.Forms;
+using Microcharts.Forms;
 
 namespace MoniHealth.Pages
 {
