@@ -13,6 +13,7 @@ using Plugin.Permissions;
 using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Extensions;
 using System.Data.Common;
+using MoniHealth.Models;
 
 namespace MoniHealth.Pages
 {

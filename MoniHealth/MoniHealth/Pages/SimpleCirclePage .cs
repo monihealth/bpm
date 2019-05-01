@@ -16,6 +16,7 @@ using OxyPlot.Axes;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using MoniHealth.Models;
 
 namespace MoniHealth.Pages
 {

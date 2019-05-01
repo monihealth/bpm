@@ -89,6 +89,9 @@
     <CodesignKey>iPhone Distribution</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <AppExtensionDebugBundleId />
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
@@ -148,6 +151,9 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="GalenPCL">
+      <Version>1.1.2</Version>
+    </PackageReference>
     <PackageReference Include="Microcharts">
       <Version>0.7.1</Version>
     </PackageReference>
@@ -186,5 +192,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\tempdata.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\MoniHealth_Logo.png" />
   </ItemGroup>
 </Project>

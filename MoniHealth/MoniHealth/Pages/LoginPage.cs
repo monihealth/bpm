@@ -100,7 +100,9 @@ namespace MoniHealth.Pages
                     LoginUnsuccessful();
                 else
                     if (Regex.IsMatch(Email.Text, emailPattern))
+                {
                     Application.Current.MainPage = new TabPage();
+                }
                 else
                     InvalidEmail();
                 // await MainPage = new NavigationPage(new PrimaryPage());

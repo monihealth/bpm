@@ -56,6 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="GalenPCL">
+      <Version>1.1.2</Version>
+    </PackageReference>
     <PackageReference Include="Microcharts">
       <Version>0.7.1</Version>
     </PackageReference>
@@ -126,7 +129,6 @@
     <Folder Include="Resources\drawable-xhdpi\" />
     <Folder Include="Resources\drawable-xxhdpi\" />
     <Folder Include="Resources\drawable-xxxhdpi\" />
-    <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MoniHealth\MoniHealth.csproj">
@@ -136,6 +138,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\tempdata.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\MoniHealth_Logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MoniHealth
+namespace MoniHealth.Models
 {
     class BPMRecords
     {

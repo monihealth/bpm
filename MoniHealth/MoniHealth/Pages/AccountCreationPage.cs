@@ -17,7 +17,7 @@ namespace MoniHealth.Pages
         {
             Label header = new Label
             {
-                Text = "Login",
+                Text = "Create Account",
                 FontSize = 20,
                 FontAttributes = FontAttributes.Bold,
                 HorizontalOptions = LayoutOptions.Center

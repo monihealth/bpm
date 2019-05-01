@@ -9,6 +9,7 @@ using System.Reflection;
 using Microcharts;
 using Microcharts.Forms;
 using System.Text;
+using MoniHealth.Models;
 
 using Xamarin.Forms;
 using static System.Net.Mime.MediaTypeNames;
@@ -417,9 +418,6 @@ namespace MoniHealth.Pages
                 Margin = new Thickness(0, 0, 0, 10)
 
             };
-
-            
-
 
         }
 
