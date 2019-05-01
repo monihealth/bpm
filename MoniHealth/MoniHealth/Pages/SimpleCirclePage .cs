@@ -210,8 +210,8 @@ namespace MoniHealth.Pages
                 grid.Children.Add(new PlotView
                 {
                     Model = plotModel1,
-                    VerticalOptions = LayoutOptions.Fill,
-                    HorizontalOptions = LayoutOptions.Fill,
+                    VerticalOptions = LayoutOptions.FillAndExpand,
+                    HorizontalOptions = LayoutOptions.FillAndExpand,
                 }, 0, 0);
             }
             catch (Exception e)
