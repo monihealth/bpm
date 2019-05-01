@@ -249,7 +249,8 @@ namespace MoniHealth.Pages
 
             avgOfLastTen.Text = AverageLastTen();
 
-            Lastest.Text ="Latest Reading: "+ Allrecord[count - 1].readingToString();
+            //Lastest.Text ="Latest Reading: "+ Allrecord[count - 1].readingToString();
+            Lastest.Text = "Your most recent blood pressure measurement taken on 3-5-2019 was 124/85 mmHG, with a heartrate of 99";
 
             Last = Allrecord[count - 1];
             //start = StartDate.Date;
@@ -399,7 +400,7 @@ namespace MoniHealth.Pages
                     /*new Label { Text = (recode[0].ToStringArray()),
                         FontSize = Device.GetNamedSize (NamedSize.Medium, typeof(Label)),
                     FontAttributes = FontAttributes.Bold}*/
-                    Lastest, chart1,  avgOfLastTen,
+                    Lastest, new Label {Text = "" },new Label { Text = "Previous 10 recorded Systolic Blood Pressure Levels"},  chart1,  avgOfLastTen,
                     new StackLayout(){ HorizontalOptions = LayoutOptions.FillAndExpand,
                     Orientation = StackOrientation.Horizontal, Children={Start, StartDate}},
                     new StackLayout(){ HorizontalOptions = LayoutOptions.FillAndExpand,

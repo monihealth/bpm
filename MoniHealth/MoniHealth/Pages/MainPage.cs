@@ -27,7 +27,7 @@ namespace MoniHealth.Pages
 
             var Lastest = new Label
             {
-                Text = " ",
+                Text = "Your most recent blood pressure measurement taken on 3-5-2019 was 124/85 mmHG, with a heartrate of 99",
                 FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label))
             };
             /*Lastest.Text = Last[0].ToString() + "-" + Last[1].ToString()
@@ -42,9 +42,10 @@ namespace MoniHealth.Pages
                 Children = {
                     new Label { Text = "Welcome back to MoniHleath" },
                     new Label {Text ="" },
-                    new Label { Text = ("Your most recent blood pressure result was " + Last[4] + " / " + Last[5]) },
+                    //new Label { Text = ("Your most recent blood pressure result was " + Last[4] + " / " + Last[5]) },
+                    Lastest,
                     new Label { Text = ("Your blood pressure is " + bpmStatus+"\n")},
-                    //Lastest,
+                    new Label { Text = "Previous 10 recorded Systolic Blood Pressure Levels"},
                     minichart
                 }
             };
