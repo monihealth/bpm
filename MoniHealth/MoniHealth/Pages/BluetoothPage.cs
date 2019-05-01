@@ -10,7 +10,9 @@ using System.Text;
 using Xamarin.Forms;
 using Plugin.Permissions.Abstractions;
 using Plugin.Permissions;
-
+using Plugin.BLE.Abstractions;
+using Plugin.BLE.Abstractions.Extensions;
+using System.Data.Common;
 
 namespace MoniHealth.Pages
 {
@@ -29,7 +31,7 @@ namespace MoniHealth.Pages
         ICharacteristic Characteristic;
         IDescriptor descriptor;
         IList<IDescriptor> descriptors;
-
+        int pin = 513138;
 
         public BluetoothTestPage()
         {
@@ -91,9 +93,25 @@ namespace MoniHealth.Pages
             };
             GetdescButton.Clicked += btnDescriptors_Clicked;
 
+            Button GettestButton = new Button
+            {
+                Text = "battery",
+                Font = Font.SystemFontOfSize(NamedSize.Small),
+                BorderWidth = 1,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.CenterAndExpand
+            };
+            GettestButton.Clicked += btnbattery_Clicked;
 
-
-
+            Button GetBPButton = new Button
+            {
+                Text = "BP",
+                Font = Font.SystemFontOfSize(NamedSize.Small),
+                BorderWidth = 1,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.CenterAndExpand
+            };
+            GetBPButton.Clicked += btnBP_Clicked;
 
 
 
@@ -125,7 +143,7 @@ namespace MoniHealth.Pages
             };
             devicesListed.ItemSelected += DevicesList_OnItemSelected;
 
-            Content = new StackLayout
+            var sat = new StackLayout
             {
                 Children = {
                     new Label { Text = "Test Page" },
@@ -136,12 +154,18 @@ namespace MoniHealth.Pages
                     GetServicesButton,
                     GetcharactersButton,
                     GetdescButton,
+                    GettestButton,
+                    GetBPButton,
                     devicesListed,
                     //texxt
                     //str,
                     //devicestr,
                     //connectButton
                 }
+            };
+            Content = new ScrollView
+            {
+                Content = sat
             };
 
             async void btnScan_Clicked(object sender, EventArgs e)
@@ -270,6 +294,7 @@ namespace MoniHealth.Pages
                 {
                     await DisplayAlert(" Error ", ex.Message, " OK ");
                 }
+                texxt.Text = device.State.ToString();
             }
 
             
@@ -285,13 +310,14 @@ namespace MoniHealth.Pages
 
                 foreach (var ser in Services)
                 {
-                    texxt.Text = texxt.Text + " \n" + ser.Name ;
+                    texxt.Text = texxt.Text + " \n" + ser.Name + " " + ser.Id.PartialFromUuid();
                 }
             }
 
 
             async void btnGetcharacters_Clicked(object sender, EventArgs e)
             {
+                byte[] bye = new byte[10];
                 //Characteristics = await Services[0].GetCharacteristicsAsync();
                 foreach (var ser in Services)
                 {
@@ -301,7 +327,10 @@ namespace MoniHealth.Pages
                         //var idGuid = car.Id;
                         //Characteristic = await Service.GetCharacteristicAsync(idGuid);
                         //  Characteristic.CanRead
-                        texxt.Text = texxt.Text + " \n" + car.Name;
+                        texxt.Text = texxt.Text + " \n" + car.Name + " " + car.Properties.ToString() + " "; //+ car.Id.PartialFromUuid() ;
+                        //bye = await car.ReadAsync();
+                        //if (car.Value != null)
+                            //texxt.Text = "hi" + texxt.Text + bye.ToString();
                     }
                 }
                 /*foreach (var ser in Characteristics)
@@ -314,33 +343,87 @@ namespace MoniHealth.Pages
             
             async void btnDescriptors_Clicked(object sender, EventArgs e)
             {
+                byte[] bye = new byte[10];
                 foreach (var ser in Services)
                 {
                     Characteristics = await ser.GetCharacteristicsAsync();
                     foreach (var car in Characteristics)
                     {
+                    //texxt.Text = texxt.Text + " \n" + car.Name + car.Properties.ToString();
                         descriptors = await car.GetDescriptorsAsync();
                         foreach (var des in descriptors)
                         {
-                            texxt.Text = texxt.Text + " \n" + des.Name;
+                            texxt.Text = texxt.Text + " \n" + des.Name + " " + des.Id.PartialFromUuid();// + des.Value.ToString();
+                            //bye = await des.ReadAsync();
+                            //if (des.Value != null)
+                                //texxt.Text ="hi" +texxt.Text+ bye.ToString();
                         }
-                        
-
+                        //texxt.Text = texxt.Text + " \n";
                     }
                 }
                 //descriptors = await Characteristic.GetDescriptorsAsync();
-
-
-
-
-
-
                 //descriptor = await Characteristic.GetDescriptorAsync(Guid.Parse("guid"));
 
             }
 
+            async void btnbattery_Clicked(object sender, EventArgs e)
+            {
+                Services = await device.GetServicesAsync();
+                string srt = "";
+                byte[] bye = new byte[0xFFFF];
+                //foreach (var ser in Services)
+                {
+                    Characteristics = await Services[5].GetCharacteristicsAsync();
+                    //foreach (var car in Characteristics)
+                    {
+                        texxt.Text = texxt.Text + " \n" + Characteristics[0].Name + Characteristics[0].Properties.ToString() + Characteristics[0].Id.PartialFromUuid();
+                        bye = await Characteristics[0].ReadAsync();
+                        var bye2 = Characteristics[0].Value;
+                        //var bye3 = BitConverter.ToUInt8(bye2, 0);
+                        for (int x = 0; x < bye.Length; x++)
+                        {
+                           
+                            srt= srt + bye[x].ToString();
+                        }
 
+                    }
+                    texxt.Text = texxt.Text +"\n Battery Level:" + srt;
 
+                }
+
+            }
+
+            async void btnBP_Clicked(object sender, EventArgs e)
+            {
+                Services = await device.GetServicesAsync();
+                string srt = "";
+                byte[] bye = new byte[0xFFFF];
+                //foreach (var ser in Services)
+                {
+                    Characteristics = await Services[3].GetCharacteristicsAsync();
+
+                    var characteristic = Characteristics[0];
+                    //foreach (var car in Characteristics)
+                     {
+                         texxt.Text = texxt.Text + " \n" + Characteristics[7].Name + Characteristics[7].Properties.ToString() + Characteristics[7].Id.PartialFromUuid();
+                         bye = await Characteristics[7].ReadAsync();
+                         var bye2 = Characteristics[7].Value;
+                         var bye3 = BitConverter.ToUInt32(bye, 0);
+                         var bye4 =bye.ToHexString();
+                        var bye5 = bye.GetHashCode();
+                        for (int x = 0; x < bye.Length; x++)
+                         {
+
+                             srt = srt + bye[x].ToString();
+                         }
+
+                     }
+                     texxt.Text = texxt.Text + "\n Battery Level:";
+                   
+
+                }
+
+            }
 
 
 
