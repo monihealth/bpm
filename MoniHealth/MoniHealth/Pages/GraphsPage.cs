@@ -332,7 +332,25 @@ namespace MoniHealth.Pages
 
             List<Microcharts.Entry> minientries = new List<Microcharts.Entry> { };
             double findmin = 300;
-            for (int i = 0; i <= 7; i++)
+            int m = 0;
+            var recordmini = Allrecord.Where(x => x.AllDate >= st && x.AllDate <= Allrecord[count - 1].AllDate).ToList();
+            foreach (var reading in recordmini)
+            {
+                
+                minientries.Add(new Microcharts.Entry((float)reading.Systolic));
+                minientries[m].Label = reading.AllDate.ToShortDateString();
+                minientries[m].ValueLabel = reading.Systolic.ToString();
+                minientries[m].Color = SKColor.Parse("#FF1493");
+                m++;
+
+                if (findmin >= reading.Systolic)
+                {
+                    findmin = reading.Systolic;
+                }
+            }
+
+
+            /*for (int i = 0; i <= 7; i++)
             {
                 minientries.Add(new Microcharts.Entry((float)Allrecord[i].Systolic));
                 minientries[i].Label = Allrecord[i].AllDate.ToShortDateString();
@@ -344,7 +362,7 @@ namespace MoniHealth.Pages
                 {
                     findmin = Allrecord[i].Systolic;
                 }
-            }
+            }*/
 
 
 
