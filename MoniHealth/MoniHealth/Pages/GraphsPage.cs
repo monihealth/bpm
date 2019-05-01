@@ -405,7 +405,7 @@ namespace MoniHealth.Pages
                     Orientation = StackOrientation.Horizontal, Children={End, EndDate} },
                     new StackLayout(){ Orientation = StackOrientation.Horizontal, Children={ typeOfGraphs, typeOfGraph } },
                     new StackLayout(){ Orientation = StackOrientation.Horizontal, Children={ Submit, ViewGraph } },
-                    avgOfSD, specificDates,newda2,
+                    avgOfSD, specificDates,
                     inputStack
                 }
             };
@@ -585,13 +585,6 @@ namespace MoniHealth.Pages
             //inputStack.Children.Add(newda);
 
         }
-
-        void miniCharts(List<Microcharts.Entry> minies, double findmin)
-        {
-            minies = null;
-            
-        }
-
 
 
 
