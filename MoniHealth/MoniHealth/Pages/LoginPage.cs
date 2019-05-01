@@ -70,6 +70,7 @@ namespace MoniHealth.Pages
                 Spacing = 5,
                 Children =
                 {
+                    new Image { Source = "MoniHealth/Resources/Images/MoniHealth_Logo.png" },
                     header,
                     Email,
                     Password,
