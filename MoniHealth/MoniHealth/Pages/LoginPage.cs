@@ -11,7 +11,7 @@ namespace MoniHealth.Pages
 {
     public class LoginPage : ContentPage
     {
-        Entry Email, Password;
+        public static Entry Email, Password;
 
         public LoginPage()
         {
@@ -76,8 +76,9 @@ namespace MoniHealth.Pages
 
                     new StackLayout() //Stackception to put two buttons side by side 
                     {
-                    HorizontalOptions = LayoutOptions.Center,
-                    Orientation = StackOrientation.Horizontal,
+                        Margin = new Thickness(20),
+                        HorizontalOptions = LayoutOptions.Center,
+                        Orientation = StackOrientation.Horizontal,
                         Children=
                         {
                         loginButton,

@@ -11,10 +11,13 @@ namespace MoniHealth
 {
     public partial class App : Application
     {
+        public static string EVENT_LAUNCH_LOGIN_PAGE = "EVENT_LAUNCH_LOGIN_PAGE";
         public App()
         {
             InitializeComponent();
-            MainPage = new NavigationPage(new LoginPage());
+            LoginPage log = new LoginPage();
+            MainPage = new NavigationPage(log);
+            MessagingCenter.Subscribe<object>(this, EVENT_LAUNCH_LOGIN_PAGE, SetLoginPageAsRootPage);
             //MainPage = new NavigationPage(new MainPage());
         }
 
@@ -34,12 +37,17 @@ namespace MoniHealth
         {
             // Handle when your app resumes
         }
-        #if __ANDROID__
+        private void SetLoginPageAsRootPage(object sender)
+        {
+            MainPage = new NavigationPage(new LoginPage());
+        }
+
+#if __ANDROID__
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-        #endif
+#endif
     }
 }

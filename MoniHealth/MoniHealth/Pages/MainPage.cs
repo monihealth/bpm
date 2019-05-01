@@ -30,19 +30,21 @@ namespace MoniHealth.Pages
                 Text = " ",
                 FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label))
             };
-            Lastest.Text = Last[0].ToString() + "-" + Last[1].ToString()
+            /*Lastest.Text = Last[0].ToString() + "-" + Last[1].ToString()
             + "-" + Last[2].ToString() + " " + Last[3] + " "
             + Last[4].ToString() + " " + Last[5].ToString()
-            + " " + Last[6].ToString();
+            + " " + Last[6].ToString();*/
 
             Content = new StackLayout
             {
+                Margin = new Thickness(20),
+                VerticalOptions = LayoutOptions.FillAndExpand,
                 Children = {
                     new Label { Text = "Welcome back to MoniHleath" },
                     new Label {Text ="" },
                     new Label { Text = ("Your most recent blood pressure result was " + Last[4] + " / " + Last[5]) },
-                    new Label { Text = ("Your blood pressure is " + bpmStatus)},
-                    Lastest,
+                    new Label { Text = ("Your blood pressure is " + bpmStatus+"\n")},
+                    //Lastest,
                     minichart
                 }
             };

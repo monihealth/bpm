@@ -113,10 +113,9 @@ namespace MoniHealth
 
         public string readingToString()
         {
-            string temp = Month.ToString() + "-" + Day.ToString()
-            + "-" + Year.ToString() + " " + Time + " "
-            + Systolic.ToString() + " " + Diastolic.ToString()
-            + " " + HeartBeat.ToString();
+            string temp =Systolic.ToString() + "/" + Diastolic.ToString()
+            + "mmHg " + HeartBeat.ToString()+ "bpm " + Month.ToString() + "-" + Day.ToString()
+            + "-" + Year.ToString() + " " + Time;
             return temp;
         }
         
