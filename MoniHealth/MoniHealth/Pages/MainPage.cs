@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microcharts.Forms;
 
 using Xamarin.Forms;
+using Microcharts.Forms;
 
 namespace MoniHealth.Pages
 {
@@ -18,6 +20,11 @@ namespace MoniHealth.Pages
             GraphsPage gif = new GraphsPage();
             Object[] Last = gif.LastRecord();
 
+            ChartView minichart = new ChartView();
+            minichart = gif.MainChart;
+
+            string bpmStatus = (bloodpressurestatus( Double.Parse(Last[4].ToString()) , Double.Parse(Last[5].ToString())) );
+
             var Lastest = new Label
             {
                 Text = " ",
@@ -31,9 +38,37 @@ namespace MoniHealth.Pages
             Content = new StackLayout
             {
                 Children = {
-                    new Label { Text = "Main Page" }, Lastest
+                    new Label { Text = "Welcome back to MoniHleath" },
+                    new Label {Text ="" },
+                    new Label { Text = ("Your most recent blood pressure result was " + Last[4] + " / " + Last[5]) },
+                    new Label { Text = ("Your blood pressure is " + bpmStatus)},
+                    Lastest,
+                    minichart
                 }
             };
+
+            string bloodpressurestatus(double Sys, double Dys)
+            {
+                if (Sys < 120 && Dys < 80)
+                {
+                    return "Normal, maintain your current lifestyle champ";
+                }
+                else if (Sys > 120 && Sys < 129 && Dys < 80)
+                {
+                    return "Elevated";
+                }
+                else if ((Sys > 130 && Sys < 139) || (Dys > 80 && Dys < 89))
+                {
+                    return "is in Stage 1 of high blood pressure, Hypertension";
+                }
+                else if (Sys > 140 || Dys > 90)
+                {
+                    return "is in Stage 2 of high blood pressure, Hypertension";
+                }
+                else
+                    return "in Hypertensive Crisis, see a doctor as soon as possible";
+            }
+
         }
     }
 }
