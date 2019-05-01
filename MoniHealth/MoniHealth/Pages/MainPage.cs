@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microcharts.Forms;
 
 using Xamarin.Forms;
 using Microcharts.Forms;
@@ -41,7 +42,8 @@ namespace MoniHealth.Pages
                     new Label {Text ="" },
                     new Label { Text = ("Your most recent blood pressure result was " + Last[4] + " / " + Last[5]) },
                     new Label { Text = ("Your blood pressure is " + bpmStatus)},
-                    Lastest, minichart
+                    Lastest,
+                    minichart
                 }
             };
 
@@ -49,7 +51,7 @@ namespace MoniHealth.Pages
             {
                 if (Sys < 120 && Dys < 80)
                 {
-                    return "Normal";
+                    return "Normal, maintain your current lifestyle champ";
                 }
                 else if (Sys > 120 && Sys < 129 && Dys < 80)
                 {
@@ -64,7 +66,7 @@ namespace MoniHealth.Pages
                     return "is in Stage 2 of high blood pressure, Hypertension";
                 }
                 else
-                    return "in Hypertensive Crisis, see a doctor immediately";
+                    return "in Hypertensive Crisis, see a doctor as soon as possible";
             }
 
         }
