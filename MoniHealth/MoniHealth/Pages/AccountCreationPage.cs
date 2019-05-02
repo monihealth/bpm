@@ -5,18 +5,23 @@ using System.Text;
 using Xamarin.Forms;
 using MoniHealth.Pages;
 using MoniHealth;
+using System.Text.RegularExpressions;
+using MoniHealth.Models;
 
 namespace MoniHealth.Pages
 {
     public class AccountCreationPage : ContentPage
     {
-        Entry fName, lName, Email, Password, Confirm;
+        public GalenCloudComm Cloud = new GalenCloudComm();
+        UserAccountInformation user = new UserAccountInformation();
+
+        Entry fName, lName, EmailE, Password, Confirm;
 
         public AccountCreationPage()
         {
             Label header = new Label
             {
-                Text = "Login",
+                Text = "Create Account",
                 FontSize = 20,
                 FontAttributes = FontAttributes.Bold,
                 HorizontalOptions = LayoutOptions.Center
@@ -36,7 +41,7 @@ namespace MoniHealth.Pages
                 Placeholder = "Enter Last Name",
                 VerticalOptions = LayoutOptions.Center,
             };
-            Email = new Entry
+            EmailE = new Entry
             {
                 Keyboard = Keyboard.Email,
                 FontSize = 11,
@@ -82,7 +87,7 @@ namespace MoniHealth.Pages
                     header,
                     fName,
                     lName,
-                    Email,
+                    EmailE,
                     Password,
                     Confirm,
                     createButton
@@ -91,9 +96,30 @@ namespace MoniHealth.Pages
 
             async void OnButtonClicked(object sender, EventArgs e)
             {
+                user.Email = EmailE.Text;
+                user.FirstName = fName.Text;
+                user.LastName = lName.Text;
+                user.Password = Password.Text;
                 //create an account through the galen cloud and then return to the login page
-
-                await Navigation.PopAsync();
+                var emailPattern = (@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+                if (EmailE.Text == null || Password.Text == null || fName.Text == null || lName.Text == null ||
+                    Confirm.Text == null)
+                    DisplayAlert("Error!", "Please fill out all the fields.", "OK");
+                else
+                    if (Password.Text != Confirm.Text)
+                    DisplayAlert("Error!", "Make sure that the passwords match", "OK");
+                else
+                    if (Regex.IsMatch(EmailE.Text, emailPattern))
+                {
+                    Action success = new Action(SuccessAlert);
+                    Action failure = new Action(FailureAlert);
+                    await GalenCloudComm.GetCloudCommunication();
+                    await Cloud.CreateAccount(user,success,failure);
+                    await Navigation.PopAsync();
+                }
+                else
+                    DisplayAlert("Error!", "Please enter a valid email address", "OK");
+                
 
                 // await MainPage = new NavigationPage(new PrimaryPage());
                 //App.Current.MainPage = new NavigationPage();
@@ -101,8 +127,14 @@ namespace MoniHealth.Pages
                 //await Navigation.PushAsync(new PrimaryPage());
             }
 
-
-
+            void SuccessAlert()
+            {
+                DisplayAlert("Account Created", "Check email to activate account", "OK");
+            }
+            void FailureAlert()
+            {
+                DisplayAlert("Account Creation Failed", "Try again later", "OK");
+            }
 
         }
     }

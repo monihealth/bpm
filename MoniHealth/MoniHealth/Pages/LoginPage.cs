@@ -5,14 +5,18 @@ using System.Text;
 using Xamarin.Forms;
 using MoniHealth.Pages;
 using MoniHealth;
+using System.Text.RegularExpressions;
+using MoniHealth.Models;
 
 namespace MoniHealth.Pages
 {
-	public class LoginPage : ContentPage
-	{
-        Entry Email, Password;
+    public class LoginPage : ContentPage
+    {
+        public static Entry EmailE, PasswordE;
 
-        public LoginPage ()
+        public GalenCloudComm Cloud = new GalenCloudComm();
+        UserAccountInformation user = new UserAccountInformation();
+        public LoginPage()
         {
             Label header = new Label
             {
@@ -22,7 +26,7 @@ namespace MoniHealth.Pages
                 HorizontalOptions = LayoutOptions.Center
             };
 
-            Email = new Entry
+            EmailE = new Entry
             {
                 Keyboard = Keyboard.Email,
                 FontSize = 13,
@@ -30,7 +34,7 @@ namespace MoniHealth.Pages
                 VerticalOptions = LayoutOptions.CenterAndExpand,
             };
 
-            Password = new Entry
+            PasswordE = new Entry
             {
                 Keyboard = Keyboard.Text,
                 FontSize = 13,
@@ -65,51 +69,67 @@ namespace MoniHealth.Pages
             Padding = new Thickness(10, 0);
             Content = new StackLayout
             {
-                VerticalOptions= LayoutOptions.Center,
-                Spacing=5,
+                VerticalOptions = LayoutOptions.Center,
+                Spacing = 5,
                 Children =
                 {
+                    new Image { Source = "MoniHealth/Resources/Images/MoniHealth_Logo.png" },
                     header,
-                    Email,
-                    Password,
+                    EmailE,
+                    PasswordE,
 
                     new StackLayout() //Stackception to put two buttons side by side 
                     {
-                    HorizontalOptions = LayoutOptions.Center,
-                    Orientation = StackOrientation.Horizontal,
+                        Margin = new Thickness(20),
+                        HorizontalOptions = LayoutOptions.Center,
+                        Orientation = StackOrientation.Horizontal,
                         Children=
                         {
                         loginButton,
                         createButton
                         }
                     },
-
-
-
                 }
             };
 
-            void OnLoginBtnClicked(object sender, EventArgs e)
+            async void OnLoginBtnClicked(object sender, EventArgs e)
             {
+                await GalenCloudComm.GetCloudCommunication();
                 //Check Login Information Later On !
                 //For now just sends to next page'
+                var emailPattern = (@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+                if (EmailE.Text == null || PasswordE.Text == null)
+                    LoginUnsuccessful();
+                else
+                    if (Regex.IsMatch(EmailE.Text, emailPattern))
+                {
 
+                    Cloud.Login(EmailE.Text, PasswordE.Text, user, )
+
+
+                    Application.Current.MainPage = new TabPage();
+                }
+                else
+                    InvalidEmail();
                 // await MainPage = new NavigationPage(new PrimaryPage());
                 //App.Current.MainPage = new NavigationPage();
                 //await Navigation.PushAsync(new PrimaryPage());
 
-                App.Current.MainPage = new NavigationPage(new TabPage());
+
             }
 
             async void OnCreateBtnClicked(object sender, EventArgs e)
             {
                 await Navigation.PushAsync(new AccountCreationPage());
             }
-
-
-
-
-
         }
-	}
+        private void LoginUnsuccessful()
+        {
+            DisplayAlert("Login", "Login unsuccessful: Empty email or password", "OK");
+        }
+        private void InvalidEmail()
+        {
+            DisplayAlert("Invalid email format", "Please enter a valid email address", "OK");
+        }
+    }
 }

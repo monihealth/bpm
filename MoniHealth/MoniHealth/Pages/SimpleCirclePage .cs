@@ -16,6 +16,7 @@ using OxyPlot.Axes;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using MoniHealth.Models;
 
 namespace MoniHealth.Pages
 {
@@ -81,6 +82,19 @@ namespace MoniHealth.Pages
             #endregion
 
             record = record.Where(x => x.AllDate >= TabPage.gif.start && x.AllDate <= TabPage.gif.end).ToList();
+
+
+            Button backButton = new Button
+            {
+                Text = "  Back  ",
+                Font = Font.SystemFontOfSize(NamedSize.Small),
+                BorderWidth = 1,
+                BorderColor = Color.LightGray,
+                HorizontalOptions = LayoutOptions.Start,
+                VerticalOptions = LayoutOptions.CenterAndExpand,
+                Margin = new Thickness(15, 0, 0, 0)
+            };
+            backButton.Clicked += OnDismissClicked;
 
 
             //var start = new DateTime(2010, 01, 01);
@@ -185,16 +199,20 @@ namespace MoniHealth.Pages
                 plotModel1.Series.Add(lineSeries3);
             }
             plotModel1.Series.Add(lineSeries1);
-            
+
+            var grid = new Grid() { Margin = new Thickness(20), VerticalOptions = LayoutOptions.FillAndExpand };
+            grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(100) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
             try
             {
-                Content = new PlotView
+                grid.Children.Add(new PlotView
                 {
                     Model = plotModel1,
                     VerticalOptions = LayoutOptions.Fill,
                     HorizontalOptions = LayoutOptions.Fill,
-                };
+                }, 0, 0);
             }
             catch (Exception e)
             {
@@ -203,11 +221,33 @@ namespace MoniHealth.Pages
                     string err = e.InnerException.Message;
                 }
             }
+            grid.Children.Add(backButton, 0, 1);
 
+            Content = grid;
+            /*try
+            {
+                //Content = loginButton;
+                Content = new PlotView
+                {
+                    Model = plotModel1,
+                    VerticalOptions = LayoutOptions.Fill,
+                    HorizontalOptions = LayoutOptions.Fill,
+                };
+                Content = loginButton;
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException != null)
+                {
+                    string err = e.InnerException.Message;
+                }
+            }*/
 
+        }
 
-
-
+        async void OnDismissClicked(object sender, EventArgs args)
+        {
+            await Navigation.PopModalAsync();
         }
 
 
