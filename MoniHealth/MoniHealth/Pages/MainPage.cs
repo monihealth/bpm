@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microcharts.Forms;
-
+using MoniHealth.Models;
 using Xamarin.Forms;
 using Microcharts.Forms;
 
@@ -27,22 +27,24 @@ namespace MoniHealth.Pages
 
             var Lastest = new Label
             {
-                Text = " ",
+                //Text = "Your most recent blood pressure measurement taken on 3-5-2019 was 124/85 mmHG, with a heartrate of 99",
                 FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label))
             };
-            Lastest.Text = Last[0].ToString() + "-" + Last[1].ToString()
-            + "-" + Last[2].ToString() + " " + Last[3] + " "
-            + Last[4].ToString() + " " + Last[5].ToString()
-            + " " + Last[6].ToString();
+            Lastest.Text =  "Your most recent blood pressure measurement taken on " + Last[0].ToString() + "-" + Last[1].ToString()
+            + "-" + Last[2].ToString() + " was " + Last[4].ToString() + "/" + Last[5].ToString() + " " +
+                "mmHG, with a heartrate of " + Last[6].ToString();
 
             Content = new StackLayout
             {
+                Margin = new Thickness(20),
+                VerticalOptions = LayoutOptions.FillAndExpand,
                 Children = {
-                    new Label { Text = "Welcome back to MoniHleath" },
+                    new Label { Text = "Welcome back to MoniHealth!" },
                     new Label {Text ="" },
-                    new Label { Text = ("Your most recent blood pressure result was " + Last[4] + " / " + Last[5]) },
-                    new Label { Text = ("Your blood pressure is " + bpmStatus)},
+                    //new Label { Text = ("Your most recent blood pressure result was " + Last[4] + " / " + Last[5]) },
                     Lastest,
+                    new Label { Text = ("Your blood pressure is " + bpmStatus+"\n")},
+                    new Label { Text = "Previous 10 Blood Pressure Results"},
                     minichart
                 }
             };

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MoniHealth
+namespace MoniHealth.Models
 {
     class BPMRecords
     {
@@ -55,6 +55,7 @@ namespace MoniHealth
             this.sBP = sBP;
             this.dBP = dBP;
             this.beat = beat;
+            this.time = time;
         }
 
         public BPMRecords(){}
@@ -113,10 +114,9 @@ namespace MoniHealth
 
         public string readingToString()
         {
-            string temp = Month.ToString() + "-" + Day.ToString()
-            + "-" + Year.ToString() + " " + Time + " "
-            + Systolic.ToString() + " " + Diastolic.ToString()
-            + " " + HeartBeat.ToString();
+            string temp =Systolic.ToString() + "/" + Diastolic.ToString()
+            + "mmHg " + HeartBeat.ToString()+ "bpm " + Month.ToString() + "-" + Day.ToString()
+            + "-" + Year.ToString() + " " + Time;
             return temp;
         }
         

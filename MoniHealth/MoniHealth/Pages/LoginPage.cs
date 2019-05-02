@@ -6,12 +6,18 @@ using Xamarin.Forms;
 using MoniHealth.Pages;
 using MoniHealth;
 using System.Text.RegularExpressions;
+using MoniHealth.Models;
+using System.Threading.Tasks;
 
 namespace MoniHealth.Pages
 {
     public class LoginPage : ContentPage
     {
-        Entry Email, Password;
+        public static Entry EmailE, PasswordE;
+
+        public GalenCloudComm Cloud = new GalenCloudComm();
+        UserAccountInformation user = new UserAccountInformation();
+
 
         public LoginPage()
         {
@@ -23,16 +29,18 @@ namespace MoniHealth.Pages
                 HorizontalOptions = LayoutOptions.Center
             };
 
-            Email = new Entry
+            EmailE = new Entry
             {
+                Text = "wjwinter1996@hotmail.com",
                 Keyboard = Keyboard.Email,
                 FontSize = 13,
                 Placeholder = "Enter email address",
                 VerticalOptions = LayoutOptions.CenterAndExpand,
             };
 
-            Password = new Entry
+            PasswordE = new Entry
             {
+                Text = "Test123!",
                 Keyboard = Keyboard.Text,
                 FontSize = 13,
                 Placeholder = "Enter password",
@@ -70,36 +78,43 @@ namespace MoniHealth.Pages
                 Spacing = 5,
                 Children =
                 {
+                    new Image { Source = "MoniHealth/Resources/Images/MoniHealth_Logo.png" },
                     header,
-                    Email,
-                    Password,
+                    EmailE,
+                    PasswordE,
 
                     new StackLayout() //Stackception to put two buttons side by side 
                     {
-                    HorizontalOptions = LayoutOptions.Center,
-                    Orientation = StackOrientation.Horizontal,
+                        Margin = new Thickness(20),
+                        HorizontalOptions = LayoutOptions.Center,
+                        Orientation = StackOrientation.Horizontal,
                         Children=
                         {
                         loginButton,
                         createButton
                         }
                     },
-
-
-
                 }
             };
 
-            void OnLoginBtnClicked(object sender, EventArgs e)
+            async void OnLoginBtnClicked(object sender, EventArgs e)
             {
+                Action <UserAccountInformation> userPass = new Action<UserAccountInformation>(populate);
+                await GalenCloudComm.GetCloudCommunication();
                 //Check Login Information Later On !
                 //For now just sends to next page'
                 var emailPattern = (@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
-                if (Email.Text == null || Password.Text == null)
+                if (EmailE.Text == null || PasswordE.Text == null)
                     LoginUnsuccessful();
                 else
-                    if (Regex.IsMatch(Email.Text, emailPattern))
+                    if (Regex.IsMatch(EmailE.Text, emailPattern))
+                {
+
+                  Task T= Cloud.Login(EmailE.Text, PasswordE.Text, userPass);
+
+
                     Application.Current.MainPage = new TabPage();
+                }
                 else
                     InvalidEmail();
                 // await MainPage = new NavigationPage(new PrimaryPage());
@@ -121,6 +136,14 @@ namespace MoniHealth.Pages
         private void InvalidEmail()
         {
             DisplayAlert("Invalid email format", "Please enter a valid email address", "OK");
+        }
+
+        private void populate(UserAccountInformation users)
+        {
+            user.Email = users.Email;
+            user.FirstName = users.FirstName;
+            user.LastName = users.LastName;
+            user.Password = users.Password;
         }
     }
 }

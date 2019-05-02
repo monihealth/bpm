@@ -9,6 +9,7 @@ using System.Reflection;
 using Microcharts;
 using Microcharts.Forms;
 using System.Text;
+using MoniHealth.Models;
 
 using Xamarin.Forms;
 using static System.Net.Mime.MediaTypeNames;
@@ -21,7 +22,7 @@ namespace MoniHealth.Pages
     public class GraphsPage : ContentPage
     {
         private BPMRecords Last = new BPMRecords();
-        Label typeOfGraphs = new Label() { FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)) };
+        Label typeOfGraphs = new Label() { FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)), VerticalOptions = LayoutOptions.End };
         List<BPMRecords> Allrecord = new List<BPMRecords>();
         List<BPMRecords> record = new List<BPMRecords>();
         Label specificDates = new Label { Text = "", FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)) };
@@ -42,12 +43,16 @@ namespace MoniHealth.Pages
         Entry inputDiastolic;
         Entry inputHeartBeat;
         Button SubmitInput;
+        Button CancelInput;
+        Label newda = new Label();
+        Label newda2 = new Label();
         StackLayout inputStack = new StackLayout()
         { VerticalOptions = LayoutOptions.StartAndExpand,
             Orientation = StackOrientation.Vertical,
         };
 
         public ChartView MainChart = new ChartView();
+        Label Lastest = new Label { Text = " ", FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)) };
 
         public GraphsPage()
         {
@@ -91,7 +96,7 @@ namespace MoniHealth.Pages
 
             //record.Add(new BPMRecords(text));
             //record.Add(new BPMRecords("1-Mar-18", 138.12, 85.12, 105));
-            var Lastest = new Label { Text = " ", FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)) };
+            //var Lastest = new Label { Text = " ", FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)) };
             
             #region Buttons and picker elements
             Button Submit = new Button
@@ -156,14 +161,14 @@ namespace MoniHealth.Pages
             typeOfGraph.Items.Add("All");
 
             typeOfGraph.SelectedIndex = 0;
-            typeOfGraphs.Text = "Graph of " + typeOfGraph.Items[typeOfGraph.SelectedIndex];
+            typeOfGraphs.Text = "Type of Graph: \n"/*+ typeOfGraph.Items[typeOfGraph.SelectedIndex]*/;
             typeOfGraph.SelectedIndexChanged += TypeOfGraphChanged;
             #endregion
 
             #region Adding data
             Input = new Button
             {
-                Text = "  Input  ",
+                Text = "  Manual Input  ",
                 Font = Font.SystemFontOfSize(NamedSize.Small),
                 BorderWidth = 1,
                 BorderColor = Color.Silver,
@@ -229,12 +234,25 @@ namespace MoniHealth.Pages
                 VerticalOptions = LayoutOptions.Start
             };
             SubmitInput.Clicked += SubInputButton;
+            CancelInput = new Button
+            {
+                Text = "  Cancel Input  ",
+                Font = Font.SystemFontOfSize(NamedSize.Small),
+                BorderWidth = 1,
+                BorderColor = Color.Silver,
+                HorizontalOptions = LayoutOptions.Start,
+                VerticalOptions = LayoutOptions.Start
+            };
+            CancelInput.Clicked += CancelInputButton;
             #endregion
 
 
             avgOfLastTen.Text = AverageLastTen();
 
-            Lastest.Text = Allrecord[count - 1].readingToString();
+            //Lastest.Text ="Latest Reading: "+ Allrecord[count - 1].readingToString();
+            Lastest.Text = "Your most recent blood pressure measurement taken on " + Allrecord[count-1].AllDate.ToShortDateString() + " was " + 
+                Allrecord[count-1].Systolic.ToString() + "/" + Allrecord[count-1].Diastolic.ToString() + " " +
+                "mmHG, with a heartrate of " + Allrecord[count-1].HeartBeat.ToString();
 
             Last = Allrecord[count - 1];
             //start = StartDate.Date;
@@ -327,35 +345,60 @@ namespace MoniHealth.Pages
             #endregion
 
             #region mini graph
-           
+
+
 
 
             List<Microcharts.Entry> minientries = new List<Microcharts.Entry> { };
+            List<Microcharts.Entry> minientries2 = new List<Microcharts.Entry> { };
             double findmin = 300;
+            double findmax = 100;
+            double findminentry1 = 300;
+            double findmaxentry1 = 100;
             int m = 0;
-            var recordmini = Allrecord.Where(x => x.AllDate >= Allrecord[count - 10].AllDate && x.AllDate <= Allrecord[count-1].AllDate).ToList();
+            var recordmini = Allrecord.Where(x => x.AllDate >= Allrecord[count - 10].AllDate && x.AllDate <= Allrecord[count - 1].AllDate).ToList();
             foreach (var reading in recordmini)
             {
-
                 minientries.Add(new Microcharts.Entry((float)reading.Systolic));
                 minientries[m].Label = reading.AllDate.ToShortDateString();
                 minientries[m].ValueLabel = reading.Systolic.ToString();
                 minientries[m].Color = SKColor.Parse("#FF1493");
+
+                if (findmax <= reading.Systolic)
+                {
+                    findmax = reading.Systolic;
+                }
+                if (findminentry1 >= reading.Systolic)
+                {
+                    findmax = reading.Systolic;
+                }
+
+                minientries2.Add(new Microcharts.Entry((float)reading.Diastolic));
+                minientries2[m].Label = reading.AllDate.ToShortDateString();
+                minientries2[m].ValueLabel = reading.Diastolic.ToString();
+                minientries2[m].Color = SKColor.Parse("#8a2be2");
                 m++;
 
-                if (findmin >= reading.Systolic)
+                if (findmin >= reading.Diastolic)
                 {
-                    findmin = reading.Systolic;
+                    findmin = reading.Diastolic;
+                }
+                if (findmaxentry1 <= reading.Diastolic)
+                {
+                    findmaxentry1 = reading.Diastolic;
                 }
             }
 
-
-
+            Grid gird = new Grid();
             ChartView chart1 = new ChartView
             {
-                Chart = new LineChart { Entries = minientries, MinValue = (int)findmin,  },
+                Chart = new LineChart { Entries = minientries, MinValue = (float)findminentry1, BackgroundColor=SKColor.Empty, MaxValue= (float)findmax },
+                HeightRequest = 160, 
+            };
+            ChartView chart2 = new ChartView
+            {
                 HeightRequest = 160,
-
+                Chart = new LineChart { Entries = minientries2, MinValue = (float)findmin, BackgroundColor = SKColor.Empty , MaxValue = (float)findmaxentry1 },
             };
             /*
             try
@@ -369,9 +412,36 @@ namespace MoniHealth.Pages
                     string err = e.InnerException.Message;
                 }
             }*/
+
+            gird.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            gird.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            gird.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            gird.Children.Add(chart1, 0, 0);
+            gird.Children.Add(chart2, 1, 0);
+
+
             #endregion
 
             MainChart = chart1;
+
+            BoxView boxView1 = new BoxView
+            {
+                Color = Color.FromHex("#FF1493"),
+                WidthRequest = 25,
+                HeightRequest = 25,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.CenterAndExpand
+            };
+
+            BoxView boxView2 = new BoxView
+            {
+                Color = Color.FromHex("#8a2be2"),
+                WidthRequest = 25,
+                HeightRequest = 25,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.CenterAndExpand
+            };
+
 
 
             StackLayout stackLayout = new StackLayout
@@ -384,12 +454,16 @@ namespace MoniHealth.Pages
                     /*new Label { Text = (recode[0].ToStringArray()),
                         FontSize = Device.GetNamedSize (NamedSize.Medium, typeof(Label)),
                     FontAttributes = FontAttributes.Bold}*/
-                    chart1, Lastest, avgOfLastTen,
+                    Lastest, new Label {Text = "" },new Label { Text = "Previous 10 recorded BP"},  gird,
+                    new StackLayout(){ Orientation = StackOrientation.Horizontal, Children={ new Label { Text = "Systolic:" },boxView1, new Label { Text = "Diastolic:" },boxView2 } },
+                    avgOfLastTen,
                     new StackLayout(){ HorizontalOptions = LayoutOptions.FillAndExpand,
                     Orientation = StackOrientation.Horizontal, Children={Start, StartDate}},
                     new StackLayout(){ HorizontalOptions = LayoutOptions.FillAndExpand,
                     Orientation = StackOrientation.Horizontal, Children={End, EndDate} },
-                    typeOfGraphs, typeOfGraph, Submit, ViewGraph, avgOfSD, specificDates,
+                    new StackLayout(){ Orientation = StackOrientation.Horizontal, Children={ typeOfGraphs, typeOfGraph } },
+                    new StackLayout(){ Orientation = StackOrientation.Horizontal, Children={ Submit, ViewGraph } },
+                    avgOfSD, specificDates,
                     inputStack
                 }
             };
@@ -401,12 +475,13 @@ namespace MoniHealth.Pages
                 Margin = new Thickness(0, 0, 0, 10)
 
             };
+
         }
 
         public string AverageLastTen()
         {
             var mostRec = Allrecord[count - 1].AllDate;
-            var tenAgo = new DateTime(mostRec.Year, mostRec.Month, (mostRec.Day-10));
+            var tenAgo = Allrecord[count - 10].AllDate;
             List<BPMRecords> rerecord = new List<BPMRecords>();
             rerecord = Allrecord.Where(x => x.AllDate >= tenAgo && x.AllDate <= mostRec).ToList();
             int counter = 0;
@@ -430,7 +505,7 @@ namespace MoniHealth.Pages
 
         void SubmitButton(object sender, EventArgs e)
         {
-            specificDates.Text = "Date           Time mmHg        HB\n";
+            //specificDates.Text = "Date           Time mmHg        HB\n";
             record = Allrecord.Where(x => x.AllDate >= start && x.AllDate <= end).ToList();
             int counter = 0;
             int avgSBP = 0;
@@ -470,7 +545,8 @@ namespace MoniHealth.Pages
         async void ViewGraphButton(object sender, EventArgs e)
         {
             var simp = new SimpleCirclePage();
-            await Navigation.PushAsync(simp);
+            //await Navigation.PushAsync(simp);
+            await Navigation.PushModalAsync(simp); 
         }
 
         void TypeOfGraphChanged(object sender, EventArgs e)
@@ -488,6 +564,10 @@ namespace MoniHealth.Pages
         void InputButton(object sender, EventArgs e)
         {
             inputStack.Children.RemoveAt(0);
+            inputSystolic.Text = null;
+            inputDiastolic.Text = null;
+            inputHeartBeat.Text = null;
+            newda.Text = "";
             inputStack.Children.Add(inputDateString);
             inputStack.Children.Add(inputDatePicker);
             inputStack.Children.Add(inputTimeString);
@@ -496,6 +576,8 @@ namespace MoniHealth.Pages
             inputStack.Children.Add(inputDiastolic);
             inputStack.Children.Add(inputHeartBeat);
             inputStack.Children.Add(SubmitInput);
+            inputStack.Children.Add(CancelInput);
+            inputStack.Children.Add(newda);
         }
 
         void InputDateChanged(object sender, EventArgs e)
@@ -510,12 +592,63 @@ namespace MoniHealth.Pages
         }
         void SubInputButton(object sender, EventArgs e)
         {
-            inputStack.Children.Clear();
-            var newda = new Label() {Text = inputDate.ToShortDateString()+ inputDate.ToShortTimeString() };
-            inputStack.Children.Add(Input);
-            inputStack.Children.Add(newda);
+            
+            var allTrue = true;
+            if (inputSystolic.Text != null && inputHeartBeat.Text != null && inputDiastolic.Text != null)
+            {
+                if (Int32.Parse(inputSystolic.Text) >= 250 || Int32.Parse(inputSystolic.Text) <= 40)
+                {
+                    allTrue = false;
+                }
+                if (Int32.Parse(inputDiastolic.Text) >= 150 || Int32.Parse(inputSystolic.Text) <= 40)
+                {
+                    allTrue = false;
+                }
+                if (Int32.Parse(inputHeartBeat.Text) >= 160 || Int32.Parse(inputSystolic.Text) <= 40)
+                {
+                    allTrue = false;
+                }
+                if (allTrue == true)
+                {
+                    inputStack.Children.Clear();
+                    //var newda = new Label() {Text = inputDate.ToShortDateString()+ inputDate.ToShortTimeString() };
+                    inputStack.Children.Add(Input);
+                    //newda.Text = "Input Successful";
+                    count = count + 1;
+                    Allrecord.Add(new BPMRecords(inputDatePicker.Date.Year, inputDatePicker.Date.Month, inputDatePicker.Date.Day, inputTimePicker.ToString(), Int32.Parse(inputSystolic.Text), Int32.Parse(inputDiastolic.Text), Int32.Parse(inputHeartBeat.Text)));
+                    Lastest.Text = "Your most recent blood pressure measurement taken on " + Allrecord[count - 1].AllDate.ToShortDateString() + " was " +
+                Allrecord[count - 1].Systolic.ToString() + "/" + Allrecord[count - 1].Diastolic.ToString() + " " +
+                "mmHG, with a heartrate of " + Allrecord[count - 1].HeartBeat.ToString();
+
+                    avgOfLastTen.Text = AverageLastTen();
+
+                    //newda2.Text = Allrecord[count-1].readingToString();
+                }
+                else
+                {
+                    newda.Text = "Improper Input";
+                }
+
+            }
+            else {
+                newda.Text = "Improper Input";
+            }
+
+
 
         }
+        void CancelInputButton(object sender, EventArgs e)
+        {
+
+            inputStack.Children.Clear();
+            //var newda = new Label() {Text = inputDate.ToShortDateString()+ inputDate.ToShortTimeString() };
+            inputStack.Children.Add(Input);
+            //inputStack.Children.Add(newda);
+
+        }
+
+
+
     }
 }
 
